@@ -3,557 +3,242 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="AfriMarket — La marketplace multi-vendeurs panafricaine. Achetez, vendez en toute sécurité avec Mobile Money et protection Escrow.">
-  <title>AfriMarket — Marketplace panafricaine</title>
+  <title>Afrimarket — Marketplace Africaine</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/design-system.css">
-  <link rel="stylesheet" href="assets/css/layout.css">
-  <link rel="stylesheet" href="assets/css/home.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
 
-<!-- ══ TICKER ═══════════════════════════════════════════════ -->
-<div class="ticker">
-  <div class="ticker-track">
-    <span class="ticker-item">🔒 Paiement Escrow — votre argent libéré uniquement à réception</span>
-    <span class="ticker-sep"></span>
-    <span class="ticker-item">📱 Orange Money · Wave · MTN MoMo · Moov Money acceptés</span>
-    <span class="ticker-sep"></span>
-    <span class="ticker-item">🌍 Livraison dans toute l'Afrique de l'Ouest</span>
-    <span class="ticker-sep"></span>
-    <span class="ticker-item">🏪 Ouvrez votre boutique gratuitement — 5% de commission uniquement sur les ventes</span>
-    <span class="ticker-sep"></span>
-    <span class="ticker-item">🔒 Paiement Escrow — votre argent libéré uniquement à réception</span>
-    <span class="ticker-sep"></span>
-    <span class="ticker-item">📱 Orange Money · Wave · MTN MoMo · Moov Money acceptés</span>
-    <span class="ticker-sep"></span>
-    <span class="ticker-item">🌍 Livraison dans toute l'Afrique de l'Ouest</span>
-    <span class="ticker-sep"></span>
-    <span class="ticker-item">🏪 Ouvrez votre boutique gratuitement — 5% de commission uniquement sur les ventes</span>
-    <span class="ticker-sep"></span>
-  </div>
-</div>
+  <!-- ═══════════════ NAVBAR ═══════════════ -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/" class="navbar-brand">🌍 Afri<span>market</span></a>
 
-<!-- ══ TOPBAR ════════════════════════════════════════════════ -->
-<div class="topbar">
-  <div class="container">
-    <div class="topbar-inner">
-      <div class="topbar-left">
-        <span>🇧🇫 Burkina Faso — FCFA</span>
-        <span class="topbar-sep">|</span>
-        <a href="#">Télécharger l'appli</a>
-        <span class="topbar-sep">|</span>
-        <a href="pages/seller-register.html">Vendre sur AfriMarket</a>
-      </div>
-      <div class="topbar-right">
-        <a href="pages/order-tracking.html">Suivre ma commande</a>
-        <span class="topbar-sep">|</span>
-        <a href="pages/help.html">Aide</a>
-        <span class="topbar-sep">|</span>
-        <a href="pages/seller-register.html">Devenir vendeur</a>
+      <ul class="navbar-nav" id="mainNav">
+        <li><a href="/">Accueil</a></li>
+        <li><a href="#categories">Catégories</a></li>
+        <li><a href="#products">Produits</a></li>
+        <li><a href="pages/seller-register.html">Vendre</a></li>
+      </ul>
+
+      <div class="navbar-actions">
+        <a href="pages/seller-register.html" class="btn btn-primary btn-sm">Devenir vendeur</a>
+        <button class="mobile-toggle" onclick="document.getElementById('mainNav').classList.toggle('open')">☰</button>
       </div>
     </div>
-  </div>
-</div>
+  </nav>
 
-<!-- ══ HEADER ════════════════════════════════════════════════ -->
-<header>
-  <div class="container">
-    <div class="header-inner">
-      <a href="index.html" class="logo">
-        <div class="logo-mark">🌍</div>
-        Afri<span class="accent">Market</span>
-      </a>
-      <div class="search-bar">
-        <select class="search-cat" id="searchCat">
-          <option value="">Tout</option>
-          <option value="electronics">Électronique</option>
-          <option value="fashion">Mode</option>
-          <option value="food">Alimentation</option>
-          <option value="beauty">Beauté</option>
-          <option value="home">Maison</option>
-          <option value="health">Santé</option>
-          <option value="auto">Automobile</option>
-        </select>
-        <input class="search-input" id="searchQ" type="text" placeholder="Rechercher des produits, boutiques, marques...">
-        <button class="search-btn" onclick="doSearch()">
-          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-          Rechercher
-        </button>
-      </div>
-      <div class="hdr-actions">
-        <button class="hdr-btn" onclick="AM.openModal('authModal')">
-          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          <div class="hdr-btn-label">
-            <small>Bonjour</small>
-            <strong class="user-name">Connexion</strong>
-          </div>
-        </button>
-        <a href="pages/wishlist.html" class="hdr-btn">
-          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          <div class="hdr-btn-label"><small>Mes</small><strong>Favoris</strong></div>
-        </a>
-        <button class="hdr-btn" onclick="AM.toggleCart()" style="position:relative">
-          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-          <div class="hdr-btn-label"><small class="cart-label-count">0 article</small><strong>Panier</strong></div>
-          <span class="cart-dot cart-count" style="display:none">0</span>
-        </button>
-        <a href="pages/seller-dashboard.html" class="btn btn-primary btn-sm hide-md">Espace Vendeur</a>
-      </div>
-    </div>
-  </div>
-</header>
+  <!-- ═══════════════ HERO ═══════════════ -->
+  <section class="hero">
+    <div class="container">
+      <h1>Le marketplace <span class="highlight">100% africain</span></h1>
+      <p>Achetez et vendez des produits physiques et digitaux dans toute l'Afrique de l'Ouest. Paiement Mobile Money, livraison locale.</p>
 
-<!-- ══ NAV ═══════════════════════════════════════════════════ -->
-<nav class="main-nav">
-  <div class="container">
-    <div class="nav-inner">
-      <div class="nav-all">
-        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-        Toutes catégories
+      <div class="hero-actions">
+        <a href="#products" class="btn btn-primary btn-lg">Explorer les produits</a>
+        <a href="pages/seller-register.html" class="btn btn-outline btn-lg" style="border-color:#fff;color:#fff;">Ouvrir une boutique</a>
       </div>
-      <div class="nav-links">
-        <a class="nav-link active" href="index.html">🏠 Accueil</a>
-        <a class="nav-link" href="pages/category.html?cat=electronics">📱 Électronique</a>
-        <a class="nav-link" href="pages/category.html?cat=fashion">👗 Mode <span class="nav-hot">TENDANCE</span></a>
-        <a class="nav-link" href="pages/category.html?cat=food">🥗 Alimentation</a>
-        <a class="nav-link" href="pages/category.html?cat=beauty">💄 Beauté</a>
-        <a class="nav-link" href="pages/category.html?cat=home">🏡 Maison</a>
-        <a class="nav-link" href="pages/category.html?cat=health">⚕️ Santé</a>
-        <a class="nav-link" href="pages/stores.html">🏪 Boutiques</a>
-      </div>
-      <div class="nav-right">
-        <a href="pages/seller-dashboard.html">📊 Tableau de bord</a>
-        <a href="pages/seller-register.html">🏪 Ouvrir une boutique</a>
-      </div>
-    </div>
-  </div>
-</nav>
 
-<!-- ══ TRUST BAR ═════════════════════════════════════════════ -->
-<div class="trust-bar">
-  <div class="container">
-    <div class="trust-items">
-      <div class="trust-item">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        <div><strong>Protection Escrow</strong><span> — paiement sécurisé</span></div>
-      </div>
-      <div class="trust-item">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-        <div><strong>Livraison suivie</strong><span> — partout en Afrique</span></div>
-      </div>
-      <div class="trust-item">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        <div><strong>Support WhatsApp</strong><span> — 7j/7</span></div>
-      </div>
-      <div class="trust-item">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.17"/></svg>
-        <div><strong>Retours sous 7 jours</strong><span> — sans justification</span></div>
-      </div>
-      <div class="trust-item">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-        <div><strong>Mobile Money</strong><span> — Orange, Wave, MTN</span></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══ HERO ══════════════════════════════════════════════════ -->
-<section class="hero">
-  <div class="hero-bg"></div>
-  <div class="container">
-    <div class="hero-inner">
-      <div class="hero-content">
-        <div class="hero-pill">
-          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-          Plateforme en cours de lancement — Soyez parmi les premiers
+      <!-- Stats — masquées si l'API renvoie 0 -->
+      <div class="hero-stats hidden" id="heroStats">
+        <div class="hero-stat">
+          <div class="number" id="statSellers">—</div>
+          <div class="label">Vendeurs actifs</div>
         </div>
-        <h1>Achetez local.<br>Vendez <span class="hero-accent">partout en Afrique.</span></h1>
-        <p>La marketplace multi-vendeurs conçue pour l'Afrique. Mobile Money intégré, paiements sécurisés par escrow, livraison suivie dans 54 pays.</p>
-        <div class="hero-ctas">
-          <button class="btn btn-primary btn-lg" onclick="document.getElementById('products-section').scrollIntoView({behavior:'smooth'})">
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-            Commencer à acheter
-          </button>
-          <a href="pages/seller-register.html" class="hero-btn-outline">
-            Ouvrir ma boutique — Gratuit
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
+        <div class="hero-stat">
+          <div class="number" id="statProducts">—</div>
+          <div class="label">Produits</div>
         </div>
-
-        <!-- Stats réelles depuis l'API — masquées si zéro -->
-        <div id="heroStats" class="hero-stats"></div>
-      </div>
-
-      <div class="hero-aside hide-lg">
-        <!-- Carte Lancement -->
-        <div class="launch-card">
-          <div class="launch-badge">🚀 LANCEMENT</div>
-          <h3>Rejoignez l'aventure</h3>
-          <p>Devenez l'un des premiers vendeurs et bénéficiez de conditions préférentielles.</p>
-          <a href="pages/seller-register.html" class="btn btn-gold" style="width:100%;margin-top:14px;justify-content:center">
-            Créer ma boutique
-          </a>
-        </div>
-        <!-- Mini catégories -->
-        <div class="hero-cats">
-          <a href="pages/category.html?cat=electronics" class="hero-cat">
-            <span>📱</span><strong>Électronique</strong>
-          </a>
-          <a href="pages/category.html?cat=fashion" class="hero-cat">
-            <span>👗</span><strong>Mode</strong>
-          </a>
-          <a href="pages/category.html?cat=food" class="hero-cat">
-            <span>🥗</span><strong>Alimentation</strong>
-          </a>
-          <a href="pages/category.html?cat=home" class="hero-cat">
-            <span>🏠</span><strong>Maison</strong>
-          </a>
+        <div class="hero-stat">
+          <div class="number" id="statOrders">—</div>
+          <div class="label">Commandes</div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ══ CATEGORIES ════════════════════════════════════════════ -->
-<section class="section" style="padding-bottom:0">
-  <div class="container">
-    <div class="fx-b" style="margin-bottom:20px">
-      <div>
-        <h2 class="section-title" style="font-family:var(--font-h);font-size:24px;font-weight:700;margin-bottom:3px">Parcourir par catégorie</h2>
-        <p style="color:var(--muted);font-size:14px">Trouvez ce dont vous avez besoin</p>
+  <!-- ═══════════════ CATEGORIES ═══════════════ -->
+  <section class="section" id="categories">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Catégories populaires</h2>
+      </div>
+      <div class="categories-grid" id="categoriesGrid">
+        <!-- Chargé par JS -->
+        <div class="skeleton" style="height:100px;"></div>
+        <div class="skeleton" style="height:100px;"></div>
+        <div class="skeleton" style="height:100px;"></div>
+        <div class="skeleton" style="height:100px;"></div>
+        <div class="skeleton" style="height:100px;"></div>
+        <div class="skeleton" style="height:100px;"></div>
       </div>
     </div>
-    <div class="cat-grid">
-      <a href="pages/category.html?cat=electronics" class="cat-card">
-        <div class="cat-ico">📱</div><strong>Électronique</strong><span>Téléphones, PC, Accessoires</span>
-      </a>
-      <a href="pages/category.html?cat=fashion" class="cat-card">
-        <div class="cat-ico">👗</div><strong>Mode</strong><span>Vêtements, Chaussures</span>
-      </a>
-      <a href="pages/category.html?cat=food" class="cat-card">
-        <div class="cat-ico">🥗</div><strong>Alimentation</strong><span>Local, Bio, Épicerie</span>
-      </a>
-      <a href="pages/category.html?cat=beauty" class="cat-card">
-        <div class="cat-ico">💄</div><strong>Beauté</strong><span>Soins, Cosmétiques</span>
-      </a>
-      <a href="pages/category.html?cat=home" class="cat-card">
-        <div class="cat-ico">🏠</div><strong>Maison</strong><span>Décoration, Équipement</span>
-      </a>
-      <a href="pages/category.html?cat=health" class="cat-card">
-        <div class="cat-ico">⚕️</div><strong>Santé</strong><span>Bien-être, Médical</span>
-      </a>
-      <a href="pages/category.html?cat=auto" class="cat-card">
-        <div class="cat-ico">🚗</div><strong>Automobile</strong><span>Pièces, Accessoires</span>
-      </a>
-      <a href="pages/category.html?cat=crafts" class="cat-card">
-        <div class="cat-ico">🎨</div><strong>Artisanat</strong><span>Fait main, Africain</span>
-      </a>
-    </div>
-  </div>
-</section>
+  </section>
 
-<!-- ══ PRODUITS ═══════════════════════════════════════════════ -->
-<section class="section" id="products-section">
-  <div class="container">
-    <!-- Filtre tabs -->
-    <div class="fx-b" style="margin-bottom:22px;flex-wrap:wrap;gap:12px">
-      <h2 style="font-family:var(--font-h);font-size:22px;font-weight:700">Produits disponibles</h2>
-      <div class="filter-tabs" id="filterTabs">
-        <button class="ftab active" onclick="filterProducts('',this)">Tout</button>
-        <button class="ftab" onclick="filterProducts('electronics',this)">📱 Électronique</button>
-        <button class="ftab" onclick="filterProducts('fashion',this)">👗 Mode</button>
-        <button class="ftab" onclick="filterProducts('food',this)">🥗 Alimentation</button>
-        <button class="ftab" onclick="filterProducts('beauty',this)">💄 Beauté</button>
+  <!-- ═══════════════ PRODUCTS ═══════════════ -->
+  <section class="section" id="products" style="background:var(--white);">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Produits récents</h2>
+        <a href="#" class="btn btn-ghost btn-sm">Voir tout →</a>
+      </div>
+      <div class="products-grid" id="productsGrid">
+        <!-- Loaded by JS, show skeleton or empty state -->
+      </div>
+      <div id="productsEmpty" class="empty-state hidden">
+        <div class="empty-icon">📦</div>
+        <div class="empty-title">Aucun produit pour le moment</div>
+        <div class="empty-desc">Soyez le premier à vendre sur Afrimarket !</div>
+        <a href="pages/seller-register.html" class="btn btn-primary mt-3">Devenir vendeur</a>
       </div>
     </div>
+  </section>
 
-    <!-- Tri -->
-    <div class="fx-b" style="margin-bottom:16px">
-      <span id="productCount" style="font-size:13px;color:var(--muted)"></span>
-      <select class="form-input" style="width:180px;padding:8px 12px;font-size:13px" onchange="sortProducts(this.value)">
-        <option value="newest">Plus récents</option>
-        <option value="price_asc">Prix croissant</option>
-        <option value="price_desc">Prix décroissant</option>
-        <option value="rating">Mieux notés</option>
-        <option value="popular">Populaires</option>
-      </select>
+  <!-- ═══════════════ CTA ═══════════════ -->
+  <section class="section text-center" style="background:var(--primary-light);">
+    <div class="container-sm">
+      <h2 style="font-size:1.75rem;font-weight:700;margin-bottom:12px;">Commencez à vendre dès aujourd'hui</h2>
+      <p class="text-muted mb-3" style="max-width:500px;margin-left:auto;margin-right:auto;">
+        Inscription en 5 minutes, vérification en 24–48h. Acceptez les paiements Mobile Money et gérez votre boutique depuis votre téléphone.
+      </p>
+      <a href="pages/seller-register.html" class="btn btn-primary btn-lg">Créer ma boutique gratuitement</a>
     </div>
+  </section>
 
-    <!-- Grid produits (rempli par l'API) -->
-    <div class="products-grid" id="productsGrid"></div>
-
-    <div style="text-align:center;margin-top:32px" id="loadMoreWrap" style="display:none">
-      <button class="btn btn-secondary" onclick="loadMoreProducts()">
-        Charger plus
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-      </button>
-    </div>
-  </div>
-</section>
-
-<!-- ══ BOUTIQUES ══════════════════════════════════════════════ -->
-<section class="section" style="padding-top:0">
-  <div class="container">
-    <div class="fx-b" style="margin-bottom:20px">
-      <div>
-        <h2 style="font-family:var(--font-h);font-size:22px;font-weight:700;margin-bottom:3px">Boutiques vérifiées</h2>
-        <p style="color:var(--muted);font-size:14px">Vendeurs approuvés par notre équipe</p>
-      </div>
-      <a href="pages/stores.html" class="btn btn-secondary btn-sm">Voir toutes →</a>
-    </div>
-    <div class="stores-grid" id="storesGrid"></div>
-  </div>
-</section>
-
-<!-- ══ PAIEMENTS ══════════════════════════════════════════════ -->
-<section class="section">
-  <div class="container">
-    <div class="payment-section">
-      <div class="payment-left">
-        <div class="badge badge-gold" style="margin-bottom:14px">🔒 Système de paiement sécurisé</div>
-        <h2 style="font-family:var(--font-h);font-size:30px;font-weight:800;color:#fff;margin-bottom:10px">
-          Payez avec confiance.<br><span style="color:var(--gold-light)">Votre argent est protégé.</span>
-        </h2>
-        <p style="color:rgba(255,255,255,.6);font-size:15px;line-height:1.75;margin-bottom:28px">
-          Quand vous payez, vos fonds sont bloqués dans notre système d'escrow sécurisé. Nous les libérons au vendeur uniquement après que vous ayez confirmé la réception de votre commande en bon état.
-        </p>
-        <div class="pay-methods-grid">
-          <div class="pay-m active" onclick="selectPay(this)">
-            <span>📱</span><strong>Orange Money</strong><small>14 pays</small>
-          </div>
-          <div class="pay-m" onclick="selectPay(this)">
-            <span>💳</span><strong>Wave</strong><small>Afrique de l'Ouest</small>
-          </div>
-          <div class="pay-m" onclick="selectPay(this)">
-            <span>📶</span><strong>MTN MoMo</strong><small>20+ pays</small>
-          </div>
-          <div class="pay-m" onclick="selectPay(this)">
-            <span>💎</span><strong>Moov Money</strong><small>BF · TG · BJ</small>
-          </div>
-          <div class="pay-m" onclick="selectPay(this)">
-            <span>🌐</span><strong>Visa / Mastercard</strong><small>International</small>
-          </div>
-          <div class="pay-m" onclick="selectPay(this)">
-            <span>🏦</span><strong>Virement bancaire</strong><small>Toutes banques</small>
-          </div>
-        </div>
-        <div class="escrow-info">
-          <span style="font-size:28px">🛡️</span>
-          <div>
-            <strong style="color:var(--green-3);display:block;margin-bottom:4px">Protection Escrow AfriMarket</strong>
-            <p style="font-size:13px;color:rgba(255,255,255,.55);line-height:1.65">
-              Le vendeur ne reçoit son argent qu'après votre confirmation. En cas de litige, notre équipe intervient. Remboursement intégral si la commande n'est pas conforme.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══ CTA VENDEUR ════════════════════════════════════════════ -->
-<section class="section" style="padding-top:0">
-  <div class="container">
-    <div class="seller-cta">
-      <div>
-        <div class="badge badge-green" style="margin-bottom:14px">🏪 Devenez vendeur</div>
-        <h2 style="font-family:var(--font-h);font-size:32px;font-weight:800;margin-bottom:12px">
-          Vendez vos produits<br><span style="color:var(--green)">à toute l'Afrique</span>
-        </h2>
-        <p style="color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:24px">
-          Créez votre boutique gratuitement en quelques étapes. Aucun frais d'inscription. Commission de 5% uniquement sur les ventes réalisées. Paiement rapide via Mobile Money.
-        </p>
-        <div class="seller-steps">
-          <div class="sstep"><div class="sstep-n">1</div><span>Créez votre compte et vérifiez votre numéro de téléphone</span></div>
-          <div class="sstep"><div class="sstep-n">2</div><span>Complétez votre dossier vendeur (identité, Mobile Money, livraison)</span></div>
-          <div class="sstep"><div class="sstep-n">3</div><span>Soumettez — notre équipe valide votre boutique sous 24-48h</span></div>
-          <div class="sstep"><div class="sstep-n">4</div><span>Publiez vos produits et commencez à vendre !</span></div>
-        </div>
-        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:26px">
-          <a href="pages/seller-register.html" class="btn btn-primary btn-lg">
-            Créer ma boutique gratuitement →
-          </a>
-          <a href="pages/seller-register.html#how-it-works" class="btn btn-outline btn-lg">
-            Comment ça marche
-          </a>
-        </div>
-        <p style="font-size:12px;color:var(--muted);margin-top:12px">
-          ✅ Gratuit · ✅ Pas de frais cachés · ✅ Paiement Mobile Money
-        </p>
-      </div>
-      <div class="seller-visual hide-lg">
-        <div class="sv-card">
-          <div style="display:flex;align-items:center;gap:10px;padding:16px;background:var(--dark-2);border-radius:var(--r-lg) var(--r-lg) 0 0">
-            <div style="width:34px;height:34px;background:var(--green);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px">🏪</div>
-            <div>
-              <div style="font-size:13px;font-weight:600;color:#fff">Votre boutique</div>
-              <div style="font-size:11px;color:rgba(255,255,255,.45)">afrimarket.com/boutique/votre-nom</div>
-            </div>
-          </div>
-          <div style="padding:16px">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-              <div>
-                <div style="font-size:12px;color:var(--muted)">Vos revenus</div>
-                <div style="font-family:var(--font-h);font-size:22px;font-weight:800;color:var(--green)">Vous définissez vos prix</div>
-              </div>
-            </div>
-            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
-              <div style="background:var(--light);border-radius:8px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:22px">📱</div>
-              <div style="background:var(--light);border-radius:8px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:22px">👗</div>
-              <div style="background:var(--light);border-radius:8px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:22px">🥗</div>
-              <div style="background:var(--light);border-radius:8px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:22px">💄</div>
-              <div style="background:var(--light);border-radius:8px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:22px">🎨</div>
-              <div style="background:var(--light);border-radius:8px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--green);font-size:20px;font-weight:700">+</div>
-            </div>
-          </div>
-          <div style="padding:12px 16px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
-            <span style="font-size:12px;color:var(--muted)">Commission AfriMarket</span>
-            <span style="font-family:var(--font-h);font-size:16px;font-weight:700;color:var(--green)">5% uniquement</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══ FOOTER ═════════════════════════════════════════════════ -->
-<footer>
-  <div class="container">
+  <!-- ═══════════════ FOOTER ═══════════════ -->
+  <footer class="footer">
     <div class="footer-grid">
-      <div class="footer-brand">
-        <a href="index.html" class="logo" style="color:#fff">
-          <div class="logo-mark">🌍</div>
-          Afri<span style="color:var(--green-3)">Market</span>
-        </a>
-        <p>La marketplace panafricaine sécurisée — Mobile Money, Escrow, livraison dans 54 pays africains.</p>
-        <div class="footer-socials">
-          <div class="social-btn">f</div>
-          <div class="social-btn">𝕏</div>
-          <div class="social-btn">in</div>
-          <div class="social-btn" style="background:#25D366;color:#fff">💬</div>
-        </div>
+      <div>
+        <div class="footer-brand">🌍 Afrimarket</div>
+        <p class="footer-desc">Le marketplace de confiance pour l'Afrique de l'Ouest. Produits physiques et digitaux, paiement Mobile Money.</p>
       </div>
-      <div class="footer-col">
+      <div>
         <h4>Marketplace</h4>
         <ul>
-          <li><a href="pages/category.html">Tous les produits</a></li>
-          <li><a href="pages/stores.html">Boutiques vérifiées</a></li>
-          <li><a href="pages/category.html?cat=crafts">Artisanat africain</a></li>
-          <li><a href="pages/category.html?cat=digital">Produits digitaux</a></li>
+          <li><a href="#">Catégories</a></li>
+          <li><a href="#">Nouveautés</a></li>
+          <li><a href="#">Promotions</a></li>
         </ul>
       </div>
-      <div class="footer-col">
+      <div>
         <h4>Vendeurs</h4>
         <ul>
-          <li><a href="pages/seller-register.html">Ouvrir une boutique</a></li>
-          <li><a href="pages/seller-dashboard.html">Tableau de bord</a></li>
-          <li><a href="#">Tarifs & commissions</a></li>
-          <li><a href="#">Guide du vendeur</a></li>
+          <li><a href="pages/seller-register.html">Devenir vendeur</a></li>
+          <li><a href="#">Guide vendeur</a></li>
+          <li><a href="#">Tarifs</a></li>
         </ul>
       </div>
-      <div class="footer-col">
-        <h4>Aide</h4>
+      <div>
+        <h4>Support</h4>
         <ul>
-          <li><a href="#">Suivre ma commande</a></li>
-          <li><a href="#">Retours & litiges</a></li>
-          <li><a href="#">Support WhatsApp</a></li>
           <li><a href="#">Centre d'aide</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>AfriMarket</h4>
-        <ul>
-          <li><a href="#">À propos</a></li>
-          <li><a href="#">Conditions d'utilisation</a></li>
-          <li><a href="#">Politique de confidentialité</a></li>
           <li><a href="#">Contact</a></li>
+          <li><a href="#">Conditions</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2025 AfriMarket. Fait en Afrique, pour l'Afrique 🌍</p>
-      <div class="pay-tags">
-        <span class="pay-tag">Orange Money</span>
-        <span class="pay-tag">Wave</span>
-        <span class="pay-tag">MTN MoMo</span>
-        <span class="pay-tag">Moov Money</span>
-        <span class="pay-tag">Visa</span>
-        <span class="pay-tag">Mastercard</span>
-      </div>
+      © 2025 Afrimarket. Tous droits réservés.
     </div>
-  </div>
-</footer>
+  </footer>
 
-<a class="wa-float" href="https://wa.me/22600000000" target="_blank" title="Support WhatsApp">💬</a>
+  <script src="js/api.js"></script>
+  <script>
+    // ─── Load public stats (hidden if zero) ───
+    (async () => {
+      try {
+        const stats = await API.getPublicStats();
+        const { sellers, products, orders } = stats;
 
-<!-- ══ AUTH MODAL ══════════════════════════════════════════════ -->
-<div class="modal-overlay" id="authModal" onclick="AM.closeOnBg(event,'authModal')">
-  <div class="modal">
-    <div class="modal-head">
-      <div class="logo" style="font-size:17px"><div class="logo-mark" style="width:28px;height:28px;font-size:13px">🌍</div>Afri<span class="accent">Market</span></div>
-      <button class="modal-close" onclick="AM.closeModal('authModal')">✕</button>
-    </div>
-    <div style="display:flex;border-bottom:1px solid var(--border);margin:0 24px">
-      <button class="tab-btn active" onclick="switchTab('login',this)">Connexion</button>
-      <button class="tab-btn" onclick="switchTab('register',this)">S'inscrire</button>
-    </div>
-    <div class="modal-body">
-      <!-- LOGIN -->
-      <div id="tab-login">
-        <div class="form-group">
-          <label class="form-label">Email ou téléphone<span class="req">*</span></label>
-          <input class="form-input" id="loginId" type="text" placeholder="+226 70 XX XX XX ou email@exemple.com">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Mot de passe<span class="req">*</span></label>
-          <input class="form-input" id="loginPwd" type="password" placeholder="••••••••">
-        </div>
-        <div style="display:flex;justify-content:space-between;margin-bottom:18px">
-          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox"> Se souvenir</label>
-          <a href="#" style="font-size:13px;color:var(--green)">Mot de passe oublié ?</a>
-        </div>
-        <button class="btn btn-primary btn-full" style="padding:12px;font-size:15px" onclick="doLogin()">Se connecter</button>
-        <p id="loginError" style="font-size:12px;color:var(--red);text-align:center;margin-top:10px;display:none"></p>
-      </div>
-      <!-- REGISTER -->
-      <div id="tab-register" style="display:none">
-        <div class="form-row">
-          <div class="form-group"><label class="form-label">Prénom<span class="req">*</span></label><input class="form-input" id="regFirst" placeholder="Moussa"></div>
-          <div class="form-group"><label class="form-label">Nom<span class="req">*</span></label><input class="form-input" id="regLast" placeholder="Traoré"></div>
-        </div>
-        <div class="form-group"><label class="form-label">Email<span class="req">*</span></label><input class="form-input" id="regEmail" type="email" placeholder="email@exemple.com"></div>
-        <div class="form-group"><label class="form-label">Téléphone<span class="req">*</span></label><input class="form-input" id="regPhone" type="tel" placeholder="+226 70 XX XX XX"></div>
-        <div class="form-group"><label class="form-label">Pays<span class="req">*</span></label>
-          <select class="form-input" id="regCountry">
-            <option value="BF">🇧🇫 Burkina Faso</option>
-            <option value="SN">🇸🇳 Sénégal</option>
-            <option value="CI">🇨🇮 Côte d'Ivoire</option>
-            <option value="ML">🇲🇱 Mali</option>
-            <option value="GH">🇬🇭 Ghana</option>
-            <option value="NG">🇳🇬 Nigéria</option>
-            <option value="TG">🇹🇬 Togo</option>
-            <option value="BJ">🇧🇯 Bénin</option>
-          </select>
-        </div>
-        <div class="form-group"><label class="form-label">Mot de passe<span class="req">*</span></label><input class="form-input" id="regPwd" type="password" placeholder="8 caractères minimum"></div>
-        <button class="btn btn-primary btn-full" style="padding:12px;font-size:15px" onclick="doRegister()">Créer mon compte</button>
-        <p style="text-align:center;font-size:12px;color:var(--muted);margin-top:12px">
-          En vous inscrivant, vous acceptez nos <a href="#" style="color:var(--green)">Conditions d'utilisation</a>
-        </p>
-        <p id="regError" style="font-size:12px;color:var(--red);text-align:center;margin-top:8px;display:none"></p>
-      </div>
-    </div>
-  </div>
-</div>
+        if (sellers > 0 || products > 0 || orders > 0) {
+          document.getElementById('heroStats').classList.remove('hidden');
+          document.getElementById('statSellers').textContent = sellers.toLocaleString('fr-FR');
+          document.getElementById('statProducts').textContent = products.toLocaleString('fr-FR');
+          document.getElementById('statOrders').textContent = orders.toLocaleString('fr-FR');
+        }
+        // If all zero → section stays hidden, no fake numbers
+      } catch (e) {
+        // API unreachable → stats section stays hidden
+        console.log('Stats API unavailable');
+      }
+    })();
 
-<!-- TOAST -->
-<div class="toast" id="am-toast"></div>
+    // ─── Load categories ───
+    (async () => {
+      const grid = document.getElementById('categoriesGrid');
+      try {
+        const cats = await API.getCategories();
+        if (cats.length === 0) {
+          grid.innerHTML = '<p class="text-muted">Catégories bientôt disponibles</p>';
+          return;
+        }
+        grid.innerHTML = cats.map(c => `
+          <div class="category-card" onclick="location.href='#'">
+            <div class="icon">${c.icon || '📦'}</div>
+            <div class="name">${c.name}</div>
+          </div>
+        `).join('');
+      } catch (e) {
+        // Fallback — show default categories
+        const defaults = [
+          { icon: '👗', name: 'Mode' },
+          { icon: '📱', name: 'Électronique' },
+          { icon: '🏠', name: 'Maison' },
+          { icon: '🌿', name: 'Beauté' },
+          { icon: '📚', name: 'Livres & Cours' },
+          { icon: '🎨', name: 'Art & Artisanat' },
+        ];
+        grid.innerHTML = defaults.map(c => `
+          <div class="category-card">
+            <div class="icon">${c.icon}</div>
+            <div class="name">${c.name}</div>
+          </div>
+        `).join('');
+      }
+    })();
 
-<!-- SCRIPTS -->
-<script>window.AM_API_URL = 'http://localhost:3000/api';</script>
-<script src="assets/js/app.js"></script>
-<script src="assets/js/home.js"></script>
+    // ─── Load products ───
+    (async () => {
+      const grid = document.getElementById('productsGrid');
+      const empty = document.getElementById('productsEmpty');
+      try {
+        const res = await API.getProducts('?limit=8&sort=recent');
+        const products = res.products || res;
+
+        if (!products || products.length === 0) {
+          grid.classList.add('hidden');
+          empty.classList.remove('hidden');
+          return;
+        }
+
+        grid.innerHTML = products.map(p => `
+          <a href="pages/product.html?id=${p.id}" class="card product-card" style="text-decoration:none;color:inherit;">
+            <div class="product-image">
+              <img src="${p.images?.[0] || 'https://via.placeholder.com/300x300?text=Produit'}" alt="${p.name}" loading="lazy">
+              ${p.discount ? `<span class="product-badge">-${p.discount}%</span>` : ''}
+            </div>
+            <div class="card-body">
+              <div class="product-name">${p.name}</div>
+              <div class="product-seller">${p.seller_name || 'Vendeur'}</div>
+              <div class="product-price">
+                <span class="current">${formatCFA(p.price)}</span>
+                ${p.original_price ? `<span class="original">${formatCFA(p.original_price)}</span>` : ''}
+              </div>
+              ${p.rating ? `
+                <div class="product-rating">
+                  <span class="stars">${'★'.repeat(Math.round(p.rating))}${'☆'.repeat(5 - Math.round(p.rating))}</span>
+                  <span class="text-muted">(${p.review_count || 0})</span>
+                </div>
+              ` : ''}
+            </div>
+          </a>
+        `).join('');
+      } catch (e) {
+        grid.classList.add('hidden');
+        empty.classList.remove('hidden');
+      }
+    })();
+  </script>
 </body>
 </html>

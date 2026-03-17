@@ -3,646 +3,104 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Produit — AfriMarket</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../assets/css/design-system.css">
-  <link rel="stylesheet" href="../assets/css/layout.css">
-  <style>
-  .product-page { padding: 28px 0 60px; }
-
-  /* ── BREADCRUMB ───────────────────────────────────────── */
-  .breadcrumb { display:flex; align-items:center; gap:6px; font-size:13px; color:var(--muted); margin-bottom:24px; flex-wrap:wrap; }
-  .breadcrumb a { color:var(--muted); transition:var(--trans); }
-  .breadcrumb a:hover { color:var(--green); }
-  .breadcrumb span { color:var(--dark); }
-
-  /* ── PRODUCT GRID ─────────────────────────────────────── */
-  .prod-layout { display:grid; grid-template-columns:1fr 420px; gap:36px; align-items:start; }
-
-  /* ── GALLERY ──────────────────────────────────────────── */
-  .gallery { position:sticky; top:80px; }
-  .gallery-main {
-    width:100%; aspect-ratio:1; background:var(--light);
-    border-radius:var(--r-xl); overflow:hidden; margin-bottom:10px;
-    display:flex; align-items:center; justify-content:center; position:relative;
-  }
-  .gallery-main img { width:100%; height:100%; object-fit:cover; transition:opacity .2s; }
-  .gallery-main .placeholder { font-size:80px; }
-  .gallery-main .badge-discount {
-    position:absolute; top:14px; left:14px;
-    background:var(--red); color:#fff; padding:4px 12px; border-radius:6px; font-size:13px; font-weight:700;
-  }
-  .gallery-thumbs { display:flex; gap:8px; overflow-x:auto; scrollbar-width:none; }
-  .gallery-thumbs::-webkit-scrollbar { display:none; }
-  .thumb {
-    width:72px; height:72px; border-radius:var(--r); flex-shrink:0;
-    border:2px solid var(--border); cursor:pointer; overflow:hidden; transition:var(--trans);
-    display:flex; align-items:center; justify-content:center; font-size:28px; background:var(--light);
-  }
-  .thumb img { width:100%; height:100%; object-fit:cover; }
-  .thumb.active,.thumb:hover { border-color:var(--green); }
-
-  /* ── PRODUCT INFO ─────────────────────────────────────── */
-  .prod-info { display:flex; flex-direction:column; gap:16px; }
-
-  .prod-store { display:flex; align-items:center; gap:8px; font-size:13px; }
-  .prod-store-logo { width:30px; height:30px; border-radius:7px; background:var(--light); display:flex; align-items:center; justify-content:center; font-size:14px; overflow:hidden; }
-  .prod-store-logo img { width:100%; height:100%; object-fit:cover; }
-  .prod-store-name { font-weight:500; color:var(--dark); }
-  .prod-store-verified { color:var(--green); font-size:11px; background:var(--green-pale); padding:2px 7px; border-radius:4px; }
-
-  .prod-title { font-family:var(--font-h); font-size:26px; font-weight:800; line-height:1.25; }
-
-  .prod-rating { display:flex; align-items:center; gap:8px; font-size:13px; }
-  .stars-lg { font-size:16px; }
-  .rating-score { font-weight:700; }
-  .rating-count { color:var(--muted); }
-  .reviews-link { color:var(--green); text-decoration:underline; cursor:pointer; }
-
-  .prod-price { display:flex; align-items:baseline; gap:10px; }
-  .price-main { font-family:var(--font-h); font-size:32px; font-weight:800; color:var(--dark); }
-  .price-old  { font-size:18px; color:var(--muted); text-decoration:line-through; }
-  .price-save { font-size:14px; color:var(--green); font-weight:500; }
-
-  .prod-availability { display:flex; align-items:center; gap:7px; font-size:14px; }
-  .avail-ok   { color:var(--green); }
-  .avail-low  { color:var(--orange); }
-  .avail-none { color:var(--red); }
-
-  /* Variants */
-  .var-group { display:flex; flex-direction:column; gap:8px; }
-  .var-label { font-size:13px; font-weight:500; color:var(--dark); }
-  .var-selected { color:var(--muted); font-weight:400; }
-  .var-opts { display:flex; gap:7px; flex-wrap:wrap; }
-  .var-btn {
-    padding:7px 15px; border:1.5px solid var(--border); border-radius:var(--r);
-    font-size:13px; cursor:pointer; transition:var(--trans); background:var(--white); font-family:var(--font-b);
-  }
-  .var-btn:hover  { border-color:var(--green); color:var(--green); }
-  .var-btn.active { border-color:var(--green); background:var(--green); color:#fff; }
-  .var-btn.unavailable { opacity:.4; text-decoration:line-through; cursor:not-allowed; }
-
-  /* Quantity */
-  .qty-row { display:flex; align-items:center; gap:14px; }
-  .qty-ctrl { display:flex; align-items:center; border:1.5px solid var(--border); border-radius:var(--r); overflow:hidden; }
-  .qty-btn { width:38px; height:38px; display:flex; align-items:center; justify-content:center; font-size:18px; cursor:pointer; transition:var(--trans); border:none; background:none; }
-  .qty-btn:hover { background:var(--light); }
-  .qty-val { padding:0 14px; font-size:15px; font-weight:600; min-width:40px; text-align:center; }
-
-  /* CTA */
-  .prod-ctas { display:flex; flex-direction:column; gap:10px; }
-  .prod-ctas .btn { padding:14px; font-size:15px; justify-content:center; }
-  .btn-wa-prod { background:#25D366; color:#fff; display:flex; align-items:center; justify-content:center; gap:8px; padding:13px; border-radius:var(--r); font-size:14px; font-weight:500; cursor:pointer; transition:var(--trans); border:none; }
-  .btn-wa-prod:hover { background:#1ebe5d; }
-
-  /* Trust signals */
-  .trust-mini { display:flex; flex-direction:column; gap:8px; background:var(--light); border-radius:var(--r); padding:14px; }
-  .trust-mini-item { display:flex; align-items:center; gap:9px; font-size:13px; }
-
-  /* ── TABS DESCRIPTION ─────────────────────────────────── */
-  .prod-tabs { margin-top:48px; }
-  .prod-tab-bar { display:flex; border-bottom:2px solid var(--border); margin-bottom:28px; }
-  .prod-tab { padding:12px 20px; font-size:14px; color:var(--muted); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; transition:var(--trans); background:none; }
-  .prod-tab.active { color:var(--green); border-bottom-color:var(--green); font-weight:500; }
-
-  /* Description */
-  .prod-description { font-size:15px; line-height:1.8; color:var(--dark); white-space:pre-wrap; }
-
-  /* Reviews */
-  .reviews-summary { display:grid; grid-template-columns:160px 1fr; gap:28px; align-items:center; margin-bottom:28px; }
-  .rs-score { text-align:center; }
-  .rs-big   { font-family:var(--font-h); font-size:56px; font-weight:800; color:var(--dark); line-height:1; }
-  .rs-stars { font-size:20px; margin:4px 0; }
-  .rs-count { font-size:13px; color:var(--muted); }
-  .rs-bars  { display:flex; flex-direction:column; gap:6px; }
-  .rs-bar-row { display:flex; align-items:center; gap:10px; font-size:13px; }
-  .rs-bar-label { width:20px; text-align:right; color:var(--muted); }
-  .rs-bar-track { flex:1; height:8px; background:var(--border); border-radius:4px; overflow:hidden; }
-  .rs-bar-fill  { height:100%; background:var(--gold-light); border-radius:4px; transition:width .5s; }
-  .rs-bar-count { width:24px; text-align:left; color:var(--muted); }
-
-  .review-card { border-bottom:1px solid var(--border); padding:20px 0; }
-  .review-card:first-child { padding-top:0; }
-  .rc-head { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:8px; }
-  .rc-author { display:flex; align-items:center; gap:9px; }
-  .rc-avatar { width:36px; height:36px; border-radius:50%; background:var(--green-pale); display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:600; color:var(--green); flex-shrink:0; }
-  .rc-name { font-size:14px; font-weight:500; }
-  .rc-date { font-size:12px; color:var(--muted); }
-  .rc-verified { font-size:11px; color:var(--green); }
-  .rc-body { font-size:14px; color:var(--dark); line-height:1.7; }
-
-  /* No reviews */
-  .no-reviews { text-align:center; padding:48px 0; }
-  .no-reviews h4 { font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:6px; }
-
-  /* ── RELATED ──────────────────────────────────────────── */
-  .related-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:14px; }
-
-  /* ── RESPONSIVE ───────────────────────────────────────── */
-  @media(max-width:1024px) {
-    .prod-layout { grid-template-columns:1fr; }
-    .gallery { position:static; }
-    .related-grid { grid-template-columns:repeat(3,1fr); }
-  }
-  @media(max-width:600px) {
-    .prod-title { font-size:20px; }
-    .price-main { font-size:24px; }
-    .related-grid { grid-template-columns:repeat(2,1fr); }
-    .reviews-summary { grid-template-columns:1fr; }
-  }
-  </style>
+  <title>Produit — Afrimarket</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/main.css">
 </head>
 <body>
 
-<!-- ══ HEADER MINIMAL ══════════════════════════════════════ -->
-<header>
-  <div class="container">
-    <div class="header-inner">
-      <a href="../index.html" class="logo">
-        <div class="logo-mark">🌍</div>
-        Afri<span class="accent">Market</span>
-      </a>
-      <div class="search-bar">
-        <input class="search-input" id="searchQ" type="text" placeholder="Rechercher des produits...">
-        <button class="search-btn" onclick="doSearch()">
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-          Rechercher
-        </button>
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="../index.html" class="navbar-brand">🌍 Afri<span>market</span></a>
+      <ul class="navbar-nav" id="mainNav">
+        <li><a href="../index.html">Accueil</a></li>
+        <li><a href="#">Catégories</a></li>
+      </ul>
+      <div class="navbar-actions">
+        <button class="btn btn-ghost btn-sm" id="cartBtn">🛒 Panier (<span id="cartCount">0</span>)</button>
+        <button class="mobile-toggle" onclick="document.getElementById('mainNav').classList.toggle('open')">☰</button>
       </div>
-      <div class="hdr-actions">
-        <button class="hdr-btn" onclick="AM.openModal('authModal')">
-          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          <div class="hdr-btn-label"><small>Bonjour</small><strong class="user-name">Connexion</strong></div>
-        </button>
-        <button class="hdr-btn" onclick="AM.toggleCart()" style="position:relative">
-          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-          <div class="hdr-btn-label"><small class="cart-label-count">0 article</small><strong>Panier</strong></div>
-          <span class="cart-dot cart-count" style="display:none">0</span>
-        </button>
+    </div>
+  </nav>
+
+  <div class="product-detail">
+    <div class="container">
+
+      <!-- Breadcrumb -->
+      <div class="mb-3" style="font-size:0.875rem;">
+        <a href="../index.html">Accueil</a> <span class="text-muted">›</span>
+        <a href="#" id="breadCategory">Catégorie</a> <span class="text-muted">›</span>
+        <span class="text-muted" id="breadProduct">Produit</span>
       </div>
+
+      <!-- Product main -->
+      <div class="flex gap-4" id="productMain">
+        <!-- Gallery -->
+        <div style="flex:1;">
+          <div class="product-gallery" id="productGallery">
+            <div class="gallery-thumbs" id="galleryThumbs"></div>
+            <div class="gallery-main" id="galleryMain">
+              <div class="skeleton skeleton-image"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Info -->
+        <div style="flex:1;" class="product-info" id="productInfo">
+          <div class="skeleton skeleton-title" style="width:80%;height:32px;"></div>
+          <div class="skeleton skeleton-text" style="width:40%;"></div>
+          <div class="skeleton skeleton-text mt-3" style="width:60%;height:48px;"></div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="product-tabs mt-4">
+        <div class="tabs-nav">
+          <button class="tab-btn active" data-tab="description" onclick="switchProductTab('description')">Description</button>
+          <button class="tab-btn" data-tab="reviews" onclick="switchProductTab('reviews')">Avis</button>
+          <button class="tab-btn" data-tab="seller" onclick="switchProductTab('seller')">Vendeur</button>
+        </div>
+
+        <div class="tab-panel" id="panel-description">
+          <div id="productDescription" class="skeleton skeleton-text" style="height:100px;"></div>
+        </div>
+
+        <div class="tab-panel hidden" id="panel-reviews">
+          <div id="reviewsList">
+            <div class="empty-state">
+              <div class="empty-icon">⭐</div>
+              <div class="empty-title">Aucun avis pour le moment</div>
+              <div class="empty-desc">Soyez le premier à donner votre avis sur ce produit.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-panel hidden" id="panel-seller">
+          <div id="sellerInfo"></div>
+        </div>
+      </div>
+
+      <!-- Related products -->
+      <div class="mt-4">
+        <h2 class="section-title mb-3">Produits similaires</h2>
+        <div class="products-grid" id="relatedProducts">
+          <div class="skeleton" style="height:300px;"></div>
+          <div class="skeleton" style="height:300px;"></div>
+          <div class="skeleton" style="height:300px;"></div>
+          <div class="skeleton" style="height:300px;"></div>
+        </div>
+      </div>
+
     </div>
   </div>
-</header>
 
-<!-- ══ CONTENU PRINCIPAL ════════════════════════════════════ -->
-<div id="pageLoading" style="text-align:center;padding:80px;color:var(--muted)">
-  <div style="font-size:32px;margin-bottom:10px">⏳</div>
-  <p>Chargement du produit...</p>
-</div>
-
-<div id="pageError" style="display:none;text-align:center;padding:80px">
-  <div style="font-size:48px;margin-bottom:16px">😕</div>
-  <h2 style="font-family:var(--font-h);font-size:24px;font-weight:700;margin-bottom:8px">Produit introuvable</h2>
-  <p style="color:var(--muted);margin-bottom:20px">Ce produit n'existe pas ou a été retiré.</p>
-  <a href="../index.html" class="btn btn-primary">Retour à l'accueil</a>
-</div>
-
-<div id="productContent" style="display:none">
-
-  <div class="container product-page">
-
-    <!-- Breadcrumb -->
-    <div class="breadcrumb" id="breadcrumb">
-      <a href="../index.html">Accueil</a> ›
-      <a href="category.html" id="bcCat">Catégorie</a> ›
-      <span id="bcProduct">Produit</span>
+  <footer class="footer">
+    <div class="footer-bottom">
+      © 2025 Afrimarket. Tous droits réservés.
     </div>
+  </footer>
 
-    <!-- Layout produit -->
-    <div class="prod-layout">
-
-      <!-- GALERIE -->
-      <div class="gallery">
-        <div class="gallery-main" id="galleryMain">
-          <div class="placeholder">📦</div>
-        </div>
-        <div class="gallery-thumbs" id="galleryThumbs"></div>
-      </div>
-
-      <!-- INFOS -->
-      <div class="prod-info" id="prodInfo">
-        <!-- Rempli par JS -->
-      </div>
-
-    </div>
-
-    <!-- TABS -->
-    <div class="prod-tabs">
-      <div class="prod-tab-bar">
-        <button class="prod-tab active" onclick="showTab('description',this)">Description</button>
-        <button class="prod-tab" onclick="showTab('reviews',this)">Avis <span id="reviewTabCount"></span></button>
-        <button class="prod-tab" onclick="showTab('delivery',this)">Livraison & Retours</button>
-      </div>
-
-      <!-- Description -->
-      <div id="tab-description">
-        <div class="prod-description" id="prodDesc">Chargement...</div>
-      </div>
-
-      <!-- Reviews -->
-      <div id="tab-reviews" style="display:none">
-        <div id="reviewsSummary"></div>
-        <div id="reviewsList"></div>
-        <div id="reviewFormSection" style="margin-top:28px"></div>
-      </div>
-
-      <!-- Livraison -->
-      <div id="tab-delivery" style="display:none">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
-          <div style="background:var(--light);border-radius:var(--r-lg);padding:20px">
-            <h4 style="font-family:var(--font-h);font-size:16px;font-weight:700;margin-bottom:14px">🚚 Livraison</h4>
-            <div id="deliveryInfo" style="font-size:14px;line-height:2;color:var(--dark)">Chargement...</div>
-          </div>
-          <div style="background:var(--light);border-radius:var(--r-lg);padding:20px">
-            <h4 style="font-family:var(--font-h);font-size:16px;font-weight:700;margin-bottom:14px">↩️ Politique de retour</h4>
-            <div style="font-size:14px;line-height:2;color:var(--dark)">
-              ✅ Retours acceptés sous <strong>7 jours</strong> après réception<br>
-              ✅ Article non conforme → remboursement intégral<br>
-              ✅ Contactez le vendeur via WhatsApp ou notre support<br>
-              ⚠️ Articles digitaux : non remboursables après téléchargement
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- PRODUITS LIÉS -->
-    <div style="margin-top:52px" id="relatedSection" style="display:none">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
-        <h2 style="font-family:var(--font-h);font-size:22px;font-weight:700">Produits similaires</h2>
-      </div>
-      <div class="related-grid" id="relatedGrid"></div>
-    </div>
-
-  </div>
-</div>
-
-<div class="toast" id="am-toast"></div>
-<a class="wa-float" href="#" id="waFloat" target="_blank" title="Contacter le vendeur">💬</a>
-
-<script>window.AM_API_URL = 'http://localhost:3000/api';</script>
-<script src="../assets/js/app.js"></script>
-<script>
-/* ═══════════════════════════════════════════════════════════
-   Page Produit — tout vient de l'API
-   ═══════════════════════════════════════════════════════════ */
-
-let product  = null;
-let qty      = 1;
-let selVars  = {};
-
-document.addEventListener('DOMContentLoaded', async () => {
-  const params    = new URLSearchParams(location.search);
-  const productId = params.get('id');
-  if (!productId) { showError(); return; }
-
-  try {
-    const [prod, reviews, related] = await Promise.all([
-      AM.products.get(productId),
-      AM.products.reviews(productId),
-      AM.products.related(productId),
-    ]);
-    product = prod;
-    renderProduct(product);
-    renderReviews(reviews);
-    renderRelated(related);
-    // Incrémenter vue
-    AM.post('/products/' + productId + '/view', {}).catch(() => {});
-  } catch (e) {
-    if (e.status === 404) showError();
-    else { showError(); console.error(e); }
-  }
-});
-
-/* ── Rendu produit ──────────────────────────────────────── */
-function renderProduct(p) {
-  document.title = p.name + ' — AfriMarket';
-
-  // Meta
-  document.getElementById('pageLoading').style.display  = 'none';
-  document.getElementById('productContent').style.display = 'block';
-
-  // Breadcrumb
-  const bcCat = document.getElementById('bcCat');
-  if (bcCat) { bcCat.textContent = p.categoryName || 'Catégorie'; bcCat.href = `category.html?cat=${p.categorySlug}`; }
-  const bcProd = document.getElementById('bcProduct');
-  if (bcProd) bcProd.textContent = p.name.slice(0, 40) + (p.name.length > 40 ? '...' : '');
-
-  // Galerie
-  const main = document.getElementById('galleryMain');
-  const thumbs = document.getElementById('galleryThumbs');
-  const discount = p.comparePrice > p.price ? Math.round((1 - p.price / p.comparePrice) * 100) : 0;
-  if (p.images && p.images.length > 0) {
-    main.innerHTML = `<img id="mainImg" src="${p.images[0]}" alt="${p.name}">
-      ${discount ? `<span class="badge-discount">-${discount}%</span>` : ''}`;
-    thumbs.innerHTML = p.images.map((img, i) => `
-      <div class="thumb ${i===0?'active':''}" onclick="switchImg('${img}',this)">
-        <img src="${img}" alt="">
-      </div>`).join('');
-  } else {
-    main.innerHTML = `<span class="placeholder">${p.categoryEmoji || '📦'}</span>
-      ${discount ? `<span class="badge-discount">-${discount}%</span>` : ''}`;
-  }
-
-  // WA float
-  const waF = document.getElementById('waFloat');
-  if (waF && p.storeWhatsapp) {
-    const msg = encodeURIComponent(`Bonjour, je suis intéressé par "${p.name}" sur AfriMarket. Réf: ${p.id}`);
-    waF.href = `https://wa.me/${p.storeWhatsapp.replace(/\D/g,'')}?text=${msg}`;
-  }
-
-  // Infos
-  const info = document.getElementById('prodInfo');
-  if (!info) return;
-
-  const ratingHtml = p.totalReviews > 0
-    ? `<div class="prod-rating">
-        <span class="stars-lg">${AM.renderStars(p.rating)}</span>
-        <span class="rating-score">${p.rating.toFixed(1)}</span>
-        <span class="rating-count">(${p.totalReviews} avis)</span>
-        <span class="reviews-link" onclick="showTab('reviews',null);document.querySelector('.prod-tabs').scrollIntoView({behavior:'smooth'})">Voir les avis →</span>
-      </div>`
-    : `<div style="font-size:13px;color:var(--muted)">⭐ Pas encore d'avis — Soyez le premier à laisser un avis</div>`;
-
-  const availHtml = p.stock > 10 ? `<span class="avail-ok">✅ En stock (${p.stock} disponibles)</span>`
-    : p.stock > 0 ? `<span class="avail-low">⚠️ Dernières pièces — Plus que ${p.stock}</span>`
-    : `<span class="avail-none">❌ Rupture de stock</span>`;
-
-  const variantsHtml = p.variants && p.variants.length > 0
-    ? p.variants.map(v => `
-      <div class="var-group">
-        <div class="var-label">${v.name} : <span class="var-selected" id="varSel_${v.name}">—</span></div>
-        <div class="var-opts">
-          ${v.values.map(val => `
-            <button class="var-btn" onclick="selectVar('${v.name}','${val}',this)">${val}</button>
-          `).join('')}
-        </div>
-      </div>`).join('')
-    : '';
-
-  info.innerHTML = `
-    <div class="prod-store">
-      <div class="prod-store-logo">
-        ${p.storeLogo ? `<img src="${p.storeLogo}" alt="">` : '🏪'}
-      </div>
-      <a href="store.html?slug=${p.storeSlug}" class="prod-store-name">${p.storeName}</a>
-      ${p.storeVerified ? '<span class="prod-store-verified">✓ Vérifié</span>' : ''}
-    </div>
-
-    <h1 class="prod-title">${p.name}</h1>
-
-    ${ratingHtml}
-
-    <div class="prod-price">
-      <span class="price-main">${AM.fmt.price(p.price)}</span>
-      ${p.comparePrice > p.price ? `<span class="price-old">${AM.fmt.price(p.comparePrice)}</span>
-        <span class="price-save">-${discount}%</span>` : ''}
-    </div>
-
-    <div class="prod-availability">${availHtml}</div>
-
-    ${variantsHtml}
-
-    <div class="qty-row">
-      <span style="font-size:14px;font-weight:500">Quantité :</span>
-      <div class="qty-ctrl">
-        <button class="qty-btn" onclick="changeQty(-1)">−</button>
-        <span class="qty-val" id="qtyVal">1</span>
-        <button class="qty-btn" onclick="changeQty(1)">+</button>
-      </div>
-      ${p.stock > 0 && p.stock <= 10 ? `<span style="font-size:12px;color:var(--orange)">Max ${p.stock}</span>` : ''}
-    </div>
-
-    <div class="prod-ctas">
-      <button class="btn btn-primary" onclick="addToCart()" ${p.stock === 0 ? 'disabled style="opacity:.5"' : ''}>
-        🛒 Ajouter au panier${p.stock === 0 ? ' (Rupture)' : ''}
-      </button>
-      ${p.storeWhatsapp
-        ? `<button class="btn-wa-prod" onclick="contactWA()">
-            💬 Commander via WhatsApp
-          </button>`
-        : ''}
-      <button class="btn btn-secondary" onclick="AM.shareWA('${p.id}')">
-        📤 Partager ce produit
-      </button>
-    </div>
-
-    <div class="trust-mini">
-      <div class="trust-mini-item">🛡️ <span>Paiement sécurisé par <strong>Escrow AfriMarket</strong></span></div>
-      <div class="trust-mini-item">↩️ <span>Retour possible sous <strong>7 jours</strong></span></div>
-      ${p.deliveryInfo ? `<div class="trust-mini-item">🚚 <span>${p.deliveryInfo}</span></div>` : ''}
-      <div class="trust-mini-item">📱 <span>Paiement Mobile Money accepté</span></div>
-    </div>`;
-
-  // Description
-  document.getElementById('prodDesc').textContent = p.description || 'Aucune description fournie.';
-
-  // Livraison
-  const delInfo = document.getElementById('deliveryInfo');
-  if (delInfo) {
-    if (p.productType === 'digital') {
-      delInfo.innerHTML = '💻 Produit digital — téléchargement immédiat après paiement confirmé<br>📧 Lien de téléchargement envoyé par email';
-    } else {
-      delInfo.innerHTML = (p.deliveryInfo || 'Information de livraison non précisée.')
-        + '<br><br>📦 <strong>Délai estimé</strong> : selon votre zone<br>🔍 Suivi de commande disponible dans votre espace client';
-    }
-  }
-}
-
-/* ── Galerie ────────────────────────────────────────────── */
-function switchImg(src, thumbEl) {
-  const main = document.getElementById('mainImg');
-  if (main) { main.style.opacity = '0'; setTimeout(() => { main.src = src; main.style.opacity = '1'; }, 150); }
-  document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
-  thumbEl?.classList.add('active');
-}
-
-/* ── Variantes ──────────────────────────────────────────── */
-function selectVar(name, val, btn) {
-  selVars[name] = val;
-  const label = document.getElementById('varSel_' + name);
-  if (label) label.textContent = val;
-  btn.closest('.var-opts').querySelectorAll('.var-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-}
-
-/* ── Quantité ───────────────────────────────────────────── */
-function changeQty(delta) {
-  const max = product?.stock || 99;
-  qty = Math.max(1, Math.min(qty + delta, max));
-  const el = document.getElementById('qtyVal');
-  if (el) el.textContent = qty;
-}
-
-/* ── Panier ─────────────────────────────────────────────── */
-function addToCart() {
-  if (!product) return;
-  const varId = Object.keys(selVars).length > 0 ? JSON.stringify(selVars) : null;
-  AM.cart.add(product.id, qty, varId);
-}
-
-/* ── WhatsApp ───────────────────────────────────────────── */
-function contactWA() {
-  if (!product?.storeWhatsapp) return;
-  const varText = Object.keys(selVars).length
-    ? '\nVariantes : ' + Object.entries(selVars).map(([k,v]) => `${k}: ${v}`).join(', ')
-    : '';
-  const msg = encodeURIComponent(
-    `Bonjour, je souhaite commander :\n📦 ${product.name}${varText}\n🔢 Quantité : ${qty}\n💰 Prix : ${AM.fmt.price(product.price * qty)}\n\nAfriMarket - ID: ${product.id}`
-  );
-  window.open(`https://wa.me/${product.storeWhatsapp.replace(/\D/g,'')}?text=${msg}`, '_blank');
-}
-
-/* ── Reviews ────────────────────────────────────────────── */
-function renderReviews(data) {
-  const { reviews, summary } = data;
-  const countEl = document.getElementById('reviewTabCount');
-  if (countEl && summary?.total > 0) countEl.textContent = `(${summary.total})`;
-
-  const summaryEl = document.getElementById('reviewsSummary');
-  const listEl    = document.getElementById('reviewsList');
-  const formEl    = document.getElementById('reviewFormSection');
-
-  if (!reviews || reviews.length === 0) {
-    if (summaryEl) summaryEl.innerHTML = '';
-    if (listEl) listEl.innerHTML = `
-      <div class="no-reviews">
-        <div style="font-size:40px;margin-bottom:12px">⭐</div>
-        <h4>Aucun avis pour l'instant</h4>
-        <p style="font-size:14px;color:var(--muted)">Achetez ce produit et soyez le premier à laisser un avis.</p>
-      </div>`;
-  } else {
-    // Résumé
-    if (summaryEl) {
-      const bars = [5,4,3,2,1].map(star => {
-        const cnt = summary.distribution?.[star] || 0;
-        const pct = summary.total > 0 ? Math.round(cnt / summary.total * 100) : 0;
-        return `<div class="rs-bar-row">
-          <span class="rs-bar-label">${star}</span>
-          <div class="rs-bar-track"><div class="rs-bar-fill" style="width:${pct}%"></div></div>
-          <span class="rs-bar-count">${cnt}</span>
-        </div>`;
-      }).join('');
-      summaryEl.innerHTML = `<div class="reviews-summary">
-        <div class="rs-score">
-          <div class="rs-big">${summary.avg.toFixed(1)}</div>
-          <div class="rs-stars">${AM.renderStars(summary.avg)}</div>
-          <div class="rs-count">${summary.total} avis</div>
-        </div>
-        <div class="rs-bars">${bars}</div>
-      </div>`;
-    }
-
-    if (listEl) {
-      listEl.innerHTML = reviews.map(r => `
-        <div class="review-card">
-          <div class="rc-head">
-            <div class="rc-author">
-              <div class="rc-avatar">${r.authorName?.charAt(0) || '?'}</div>
-              <div>
-                <div class="rc-name">${r.authorName || 'Client'}</div>
-                <div class="rc-date">${new Date(r.createdAt).toLocaleDateString('fr-FR', {year:'numeric',month:'long',day:'numeric'})}</div>
-              </div>
-            </div>
-            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
-              <div>${AM.renderStars(r.rating)}</div>
-              ${r.verifiedPurchase ? '<span class="rc-verified">✅ Achat vérifié</span>' : ''}
-            </div>
-          </div>
-          ${r.title ? `<div style="font-weight:500;margin-bottom:6px;font-size:14px">${r.title}</div>` : ''}
-          <div class="rc-body">${r.body}</div>
-          ${r.images?.length ? `<div style="display:flex;gap:8px;margin-top:10px">${r.images.map(img => `<img src="${img}" style="width:60px;height:60px;border-radius:6px;object-fit:cover">`).join('')}</div>` : ''}
-        </div>`).join('');
-    }
-  }
-
-  // Formulaire d'avis (seulement si connecté et achat vérifié — géré côté serveur)
-  if (formEl) {
-    if (AM.auth.isLogged()) {
-      formEl.innerHTML = `
-        <div style="background:var(--light);border-radius:var(--r-lg);padding:24px">
-          <h4 style="font-family:var(--font-h);font-size:16px;font-weight:700;margin-bottom:16px">Laisser un avis</h4>
-          <div class="form-group">
-            <label class="form-label">Note <span class="req">*</span></label>
-            <div style="display:flex;gap:6px" id="starInput">
-              ${[1,2,3,4,5].map(s => `<button onclick="setReviewStar(${s})" style="font-size:28px;background:none;border:none;cursor:pointer;transition:transform .1s;opacity:.4" id="rstar${s}" title="${s} étoile${s>1?'s':''}">★</button>`).join('')}
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Titre de l'avis</label>
-            <input class="form-input" id="rv_title" placeholder="Résumez votre expérience en quelques mots">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Votre avis <span class="req">*</span></label>
-            <textarea class="form-input" id="rv_body" rows="4" placeholder="Décrivez le produit, sa qualité, la livraison..." maxlength="1000"></textarea>
-          </div>
-          <button class="btn btn-primary" onclick="submitReview()">Publier mon avis</button>
-          <div id="reviewMsg" style="margin-top:10px"></div>
-        </div>`;
-    } else {
-      formEl.innerHTML = `<div style="text-align:center;padding:20px;background:var(--light);border-radius:var(--r-lg);font-size:14px;color:var(--muted)">
-        <a onclick="AM.openModal('authModal')" style="color:var(--green);cursor:pointer;font-weight:500">Connectez-vous</a> pour laisser un avis sur ce produit.
-      </div>`;
-    }
-  }
-}
-
-let selectedStar = 0;
-function setReviewStar(n) {
-  selectedStar = n;
-  for (let i = 1; i <= 5; i++) {
-    const el = document.getElementById('rstar' + i);
-    if (el) el.style.opacity = i <= n ? '1' : '.3';
-  }
-}
-
-async function submitReview() {
-  if (!selectedStar) { AM.toast('Choisissez une note', 'error'); return; }
-  const body  = document.getElementById('rv_body')?.value.trim();
-  const title = document.getElementById('rv_title')?.value.trim();
-  if (!body || body.length < 10) { AM.toast('Avis trop court (min 10 chars)', 'error'); return; }
-  try {
-    await AM.post('/products/' + product.id + '/reviews', { rating: selectedStar, title, body }, true);
-    const msg = document.getElementById('reviewMsg');
-    if (msg) msg.innerHTML = '<div class="verified-badge">✅ Merci pour votre avis ! Il sera affiché après modération.</div>';
-    AM.toast('Avis soumis', 'success');
-  } catch (e) { AM.toast(e.message || 'Impossible de publier l\'avis.', 'error'); }
-}
-
-/* ── Produits liés ──────────────────────────────────────── */
-function renderRelated(products) {
-  const sec  = document.getElementById('relatedSection');
-  const grid = document.getElementById('relatedGrid');
-  if (!products || products.length === 0 || !sec || !grid) return;
-  sec.style.display = 'block';
-  grid.innerHTML = products.slice(0,5).map(p => AM.renderProductCard(p)).join('');
-}
-
-/* ── Tabs ───────────────────────────────────────────────── */
-function showTab(id, btn) {
-  ['description','reviews','delivery'].forEach(t => {
-    document.getElementById('tab-'+t).style.display = t === id ? 'block' : 'none';
-  });
-  document.querySelectorAll('.prod-tab').forEach(b => b.classList.remove('active'));
-  if (btn) btn.classList.add('active');
-  else document.querySelectorAll('.prod-tab').forEach((b,i) => {
-    if (['description','reviews','delivery'][i] === id) b.classList.add('active');
-  });
-}
-
-/* ── Recherche ──────────────────────────────────────────── */
-function doSearch() {
-  const q = document.getElementById('searchQ')?.value.trim();
-  if (q) location.href = 'category.html?q=' + encodeURIComponent(q);
-}
-document.getElementById('searchQ')?.addEventListener('keydown', e => { if(e.key==='Enter') doSearch(); });
-
-/* ── Erreur ─────────────────────────────────────────────── */
-function showError() {
-  document.getElementById('pageLoading').style.display = 'none';
-  document.getElementById('pageError').style.display   = 'block';
-}
-</script>
+  <script src="../js/api.js"></script>
+  <script src="../js/product.js"></script>
 </body>
 </html>
