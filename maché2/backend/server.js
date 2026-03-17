@@ -73,3 +73,5 @@ app.listen(PORT, () => {
   console.log(`   Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`   Frontend URL: ${process.env.FRONTEND_URL || 'any origin'}\n`);
 });
+const routes = require('./routes');
+app.use('/api', routes);
