@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Produit — Afrimarket</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="../index.html" class="navbar-brand">🌍 Afri<span>market</span></a>
+      <ul class="navbar-nav" id="mainNav">
+        <li><a href="../index.html">Accueil</a></li>
+        <li><a href="#">Catégories</a></li>
+      </ul>
+      <div class="navbar-actions">
+        <button class="btn btn-ghost btn-sm" id="cartBtn">🛒 Panier (<span id="cartCount">0</span>)</button>
+        <button class="mobile-toggle" onclick="document.getElementById('mainNav').classList.toggle('open')">☰</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="product-detail">
+    <div class="container">
+
+      <!-- Breadcrumb -->
+      <div class="mb-3" style="font-size:0.875rem;">
+        <a href="../index.html">Accueil</a> <span class="text-muted">›</span>
+        <a href="#" id="breadCategory">Catégorie</a> <span class="text-muted">›</span>
+        <span class="text-muted" id="breadProduct">Produit</span>
+      </div>
+
+      <!-- Product main -->
+      <div class="flex gap-4" id="productMain">
+        <!-- Gallery -->
+        <div style="flex:1;">
+          <div class="product-gallery" id="productGallery">
+            <div class="gallery-thumbs" id="galleryThumbs"></div>
+            <div class="gallery-main" id="galleryMain">
+              <div class="skeleton skeleton-image"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Info -->
+        <div style="flex:1;" class="product-info" id="productInfo">
+          <div class="skeleton skeleton-title" style="width:80%;height:32px;"></div>
+          <div class="skeleton skeleton-text" style="width:40%;"></div>
+          <div class="skeleton skeleton-text mt-3" style="width:60%;height:48px;"></div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="product-tabs mt-4">
+        <div class="tabs-nav">
+          <button class="tab-btn active" data-tab="description" onclick="switchProductTab('description')">Description</button>
+          <button class="tab-btn" data-tab="reviews" onclick="switchProductTab('reviews')">Avis</button>
+          <button class="tab-btn" data-tab="seller" onclick="switchProductTab('seller')">Vendeur</button>
+        </div>
+
+        <div class="tab-panel" id="panel-description">
+          <div id="productDescription" class="skeleton skeleton-text" style="height:100px;"></div>
+        </div>
+
+        <div class="tab-panel hidden" id="panel-reviews">
+          <div id="reviewsList">
+            <div class="empty-state">
+              <div class="empty-icon">⭐</div>
+              <div class="empty-title">Aucun avis pour le moment</div>
+              <div class="empty-desc">Soyez le premier à donner votre avis sur ce produit.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-panel hidden" id="panel-seller">
+          <div id="sellerInfo"></div>
+        </div>
+      </div>
+
+      <!-- Related products -->
+      <div class="mt-4">
+        <h2 class="section-title mb-3">Produits similaires</h2>
+        <div class="products-grid" id="relatedProducts">
+          <div class="skeleton" style="height:300px;"></div>
+          <div class="skeleton" style="height:300px;"></div>
+          <div class="skeleton" style="height:300px;"></div>
+          <div class="skeleton" style="height:300px;"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-bottom">
+      © 2025 Afrimarket. Tous droits réservés.
+    </div>
+  </footer>
+
+  <script src="../js/api.js"></script>
+  <script src="../js/product.js"></script>
+</body>
+</html>

@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Devenir vendeur — Afrimarket</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="../index.html" class="navbar-brand">🌍 Afri<span>market</span></a>
+      <div class="text-sm text-muted">Inscription vendeur</div>
+    </div>
+  </nav>
+
+  <div class="section" style="min-height:calc(100vh - 64px);">
+    <div class="container-sm">
+
+      <!-- ═══════════════ STEPPER ═══════════════ -->
+      <div class="stepper" id="stepper">
+        <div class="stepper-step active" data-step="1">
+          <div class="stepper-circle">1</div>
+          <div class="stepper-label">Téléphone</div>
+        </div>
+        <div class="stepper-step" data-step="2">
+          <div class="stepper-circle">2</div>
+          <div class="stepper-label">Type</div>
+        </div>
+        <div class="stepper-step" data-step="3">
+          <div class="stepper-circle">3</div>
+          <div class="stepper-label">Boutique</div>
+        </div>
+        <div class="stepper-step" data-step="4">
+          <div class="stepper-circle">4</div>
+          <div class="stepper-label">Identité</div>
+        </div>
+        <div class="stepper-step" data-step="5">
+          <div class="stepper-circle">5</div>
+          <div class="stepper-label">Paiement</div>
+        </div>
+        <div class="stepper-step" data-step="6">
+          <div class="stepper-circle">6</div>
+          <div class="stepper-label">Confirmation</div>
+        </div>
+      </div>
+
+      <!-- ═══════════════ STEP 1 — PHONE + OTP ═══════════════ -->
+      <div class="card" id="step1">
+        <div class="card-body p-4">
+          <h2 class="text-xl font-bold mb-1">Vérification du téléphone</h2>
+          <p class="text-muted mb-3">Nous allons envoyer un code SMS à 6 chiffres pour vérifier votre numéro.</p>
+
+          <!-- Phone input -->
+          <div id="phoneSection">
+            <div class="form-group">
+              <label class="form-label">Numéro de téléphone <span class="required">*</span></label>
+              <div class="flex gap-1">
+                <select class="form-select" style="width:120px;" id="phonePrefix">
+                  <option value="+225">🇨🇮 +225</option>
+                  <option value="+221">🇸🇳 +221</option>
+                  <option value="+223">🇲🇱 +223</option>
+                  <option value="+226">🇧🇫 +226</option>
+                  <option value="+228">🇹🇬 +228</option>
+                  <option value="+229">🇧🇯 +229</option>
+                  <option value="+237">🇨🇲 +237</option>
+                  <option value="+224">🇬🇳 +224</option>
+                </select>
+                <input type="tel" class="form-input" id="phoneNumber" placeholder="07 XX XX XX XX" maxlength="15">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Nom complet <span class="required">*</span></label>
+              <input type="text" class="form-input" id="fullName" placeholder="Kouassi Ama">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Email (optionnel)</label>
+              <input type="email" class="form-input" id="email" placeholder="votre@email.com">
+            </div>
+
+            <button class="btn btn-primary w-full" id="btnSendOTP" onclick="sendOTP()">
+              Envoyer le code SMS
+            </button>
+          </div>
+
+          <!-- OTP input (hidden initially) -->
+          <div id="otpSection" class="hidden">
+            <div class="text-center">
+              <p class="mb-2">Code envoyé au <strong id="otpPhoneDisplay"></strong></p>
+
+              <div class="otp-inputs" id="otpInputs">
+                <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]" data-index="0">
+                <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]" data-index="1">
+                <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]" data-index="2">
+                <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]" data-index="3">
+                <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]" data-index="4">
+                <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]" data-index="5">
+              </div>
+
+              <div class="otp-timer">
+                <span id="timerText">Renvoyer le code dans <span class="countdown" id="countdown">60</span>s</span>
+                <button class="otp-resend hidden" id="btnResend" onclick="sendOTP()">Renvoyer le code</button>
+              </div>
+
+              <p id="otpError" class="text-danger text-sm mt-2 hidden"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════ STEP 2 — TYPE ═══════════════ -->
+      <div class="card hidden" id="step2">
+        <div class="card-body p-4">
+          <h2 class="text-xl font-bold mb-1">Type de produits</h2>
+          <p class="text-muted mb-3">Choisissez le type de produits que vous allez vendre. Les documents requis changent selon votre choix.</p>
+
+          <div class="type-selector">
+            <div class="type-option" data-type="physical" onclick="selectType('physical')">
+              <div class="type-icon">📦</div>
+              <div class="type-name">Produits physiques</div>
+              <div class="type-desc">Vêtements, électronique, artisanat, alimentation…</div>
+              <ul class="type-docs">
+                <li>Pièce d'identité (CNI ou Passeport)</li>
+                <li>Selfie avec pièce d'identité</li>
+                <li>Compte Mobile Money</li>
+                <li>Méthode de livraison</li>
+              </ul>
+            </div>
+
+            <div class="type-option" data-type="digital" onclick="selectType('digital')">
+              <div class="type-icon">💻</div>
+              <div class="type-name">Produits digitaux</div>
+              <div class="type-desc">E-books, formations, templates, logiciels, musique…</div>
+              <ul class="type-docs">
+                <li>Pièce d'identité (CNI ou Passeport)</li>
+                <li>Selfie avec pièce d'identité</li>
+                <li>Compte Mobile Money</li>
+                <li>Pas de livraison physique</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="flex justify-between mt-3">
+            <button class="btn btn-ghost" onclick="goToStep(1)">← Retour</button>
+            <button class="btn btn-primary" id="btnStep2Next" disabled onclick="goToStep(3)">Continuer →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════ STEP 3 — SHOP ═══════════════ -->
+      <div class="card hidden" id="step3">
+        <div class="card-body p-4">
+          <h2 class="text-xl font-bold mb-1">Votre boutique</h2>
+          <p class="text-muted mb-3">Choisissez un nom unique pour votre boutique en ligne.</p>
+
+          <div class="form-group">
+            <label class="form-label">Nom de la boutique <span class="required">*</span></label>
+            <input type="text" class="form-input" id="shopName" placeholder="Ma Boutique Abidjan" maxlength="50" oninput="generateSlug()">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">URL de la boutique</label>
+            <div class="flex items-center gap-1">
+              <span class="text-muted text-sm">afrimarket.com/</span>
+              <input type="text" class="form-input" id="shopSlug" placeholder="ma-boutique-abidjan" style="flex:1;" oninput="checkSlug()">
+              <span id="slugStatus"></span>
+            </div>
+            <div class="form-hint" id="slugHint">L'URL sera générée automatiquement à partir du nom</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Description de la boutique</label>
+            <textarea class="form-textarea" id="shopDescription" placeholder="Décrivez votre boutique et ce que vous vendez..." maxlength="500"></textarea>
+            <div class="form-hint"><span id="descCount">0</span>/500 caractères</div>
+          </div>
+
+          <div class="flex justify-between mt-3">
+            <button class="btn btn-ghost" onclick="goToStep(2)">← Retour</button>
+            <button class="btn btn-primary" id="btnStep3Next" onclick="validateStep3()">Continuer →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════ STEP 4 — IDENTITY DOCUMENTS ═══════════════ -->
+      <div class="card hidden" id="step4">
+        <div class="card-body p-4">
+          <h2 class="text-xl font-bold mb-1">Vérification d'identité</h2>
+          <p class="text-muted mb-3">Pour la sécurité de tous, nous devons vérifier votre identité. Vos documents sont chiffrés et confidentiels.</p>
+
+          <div class="form-group">
+            <label class="form-label">Type de document <span class="required">*</span></label>
+            <select class="form-select" id="docType">
+              <option value="">Choisir...</option>
+              <option value="cni">Carte Nationale d'Identité</option>
+              <option value="passport">Passeport</option>
+            </select>
+          </div>
+
+          <!-- Recto -->
+          <div class="form-group">
+            <label class="form-label">Recto du document <span class="required">*</span></label>
+            <div class="file-upload" id="uploadRecto" onclick="document.getElementById('inputRecto').click()">
+              <div class="upload-icon">📄</div>
+              <div class="upload-text">Cliquez ou glissez le fichier ici</div>
+              <div class="upload-hint">JPG, PNG ou PDF — 5 Mo max</div>
+            </div>
+            <input type="file" id="inputRecto" accept="image/*,.pdf" class="hidden" onchange="handleFileUpload('recto', this)">
+            <div id="previewRecto"></div>
+          </div>
+
+          <!-- Verso -->
+          <div class="form-group">
+            <label class="form-label">Verso du document <span class="required">*</span></label>
+            <div class="file-upload" id="uploadVerso" onclick="document.getElementById('inputVerso').click()">
+              <div class="upload-icon">📄</div>
+              <div class="upload-text">Cliquez ou glissez le fichier ici</div>
+              <div class="upload-hint">JPG, PNG ou PDF — 5 Mo max</div>
+            </div>
+            <input type="file" id="inputVerso" accept="image/*,.pdf" class="hidden" onchange="handleFileUpload('verso', this)">
+            <div id="previewVerso"></div>
+          </div>
+
+          <!-- Selfie -->
+          <div class="form-group">
+            <label class="form-label">Selfie avec le document <span class="required">*</span></label>
+            <div class="alert alert-info mb-2">
+              <span>📷</span>
+              <span>Prenez une photo de vous tenant votre document d'identité à côté de votre visage. Le document doit être lisible.</span>
+            </div>
+            <div class="file-upload" id="uploadSelfie" onclick="document.getElementById('inputSelfie').click()">
+              <div class="upload-icon">🤳</div>
+              <div class="upload-text">Cliquez pour prendre ou choisir la photo</div>
+              <div class="upload-hint">JPG ou PNG — 5 Mo max</div>
+            </div>
+            <input type="file" id="inputSelfie" accept="image/*" capture="user" class="hidden" onchange="handleFileUpload('selfie', this)">
+            <div id="previewSelfie"></div>
+          </div>
+
+          <div class="flex justify-between mt-3">
+            <button class="btn btn-ghost" onclick="goToStep(3)">← Retour</button>
+            <button class="btn btn-primary" id="btnStep4Next" onclick="validateStep4()">Continuer →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════ STEP 5 — PAYMENT + DELIVERY ═══════════════ -->
+      <div class="card hidden" id="step5">
+        <div class="card-body p-4">
+          <h2 class="text-xl font-bold mb-1">Paiement & Livraison</h2>
+          <p class="text-muted mb-3">Configurez comment vous recevez vos paiements et comment vous livrez.</p>
+
+          <h3 class="font-semibold mb-2">💰 Mobile Money</h3>
+
+          <div class="form-group">
+            <label class="form-label">Opérateur <span class="required">*</span></label>
+            <select class="form-select" id="momoProvider">
+              <option value="">Choisir l'opérateur...</option>
+              <option value="orange_money">🟠 Orange Money</option>
+              <option value="wave">🔵 Wave</option>
+              <option value="mtn_momo">🟡 MTN Mobile Money</option>
+              <option value="moov_money">🟣 Moov Money</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Numéro Mobile Money <span class="required">*</span></label>
+            <input type="tel" class="form-input" id="momoNumber" placeholder="07 XX XX XX XX">
+            <div class="form-hint">Le numéro sera vérifié par un micro-dépôt de test</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Nom du titulaire <span class="required">*</span></label>
+            <input type="text" class="form-input" id="momoName" placeholder="Nom tel qu'il apparaît sur le compte">
+          </div>
+
+          <!-- Delivery section — only for physical -->
+          <div id="deliverySection">
+            <hr class="mt-3 mb-3" style="border:none;border-top:1px solid var(--gray-200);">
+            <h3 class="font-semibold mb-2">🚚 Méthodes de livraison</h3>
+            <p class="text-muted text-sm mb-2">Sélectionnez au moins une méthode de livraison pour vos produits physiques.</p>
+
+            <div class="form-group">
+              <label class="form-check">
+                <input type="checkbox" name="delivery" value="hand_delivery">
+                <div>
+                  <strong>Remise en main propre</strong>
+                  <div class="text-sm text-muted">Le client vient récupérer à votre adresse</div>
+                </div>
+              </label>
+            </div>
+
+            <div class="form-group">
+              <label class="form-check">
+                <input type="checkbox" name="delivery" value="local_delivery">
+                <div>
+                  <strong>Livraison locale</strong>
+                  <div class="text-sm text-muted">Vous livrez dans votre ville</div>
+                </div>
+              </label>
+            </div>
+
+            <div class="form-group">
+              <label class="form-check">
+                <input type="checkbox" name="delivery" value="national_shipping">
+                <div>
+                  <strong>Expédition nationale</strong>
+                  <div class="text-sm text-muted">Envoi dans tout le pays via transporteur</div>
+                </div>
+              </label>
+            </div>
+
+            <div class="form-group">
+              <label class="form-check">
+                <input type="checkbox" name="delivery" value="partner_delivery">
+                <div>
+                  <strong>Partenaire de livraison Afrimarket</strong>
+                  <div class="text-sm text-muted">Nous gérons la livraison pour vous (frais appliqués)</div>
+                </div>
+              </label>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Adresse / point de retrait</label>
+              <input type="text" class="form-input" id="pickupAddress" placeholder="Quartier, ville">
+            </div>
+          </div>
+
+          <div class="flex justify-between mt-3">
+            <button class="btn btn-ghost" onclick="goToStep(4)">← Retour</button>
+            <button class="btn btn-primary" onclick="validateStep5()">Continuer →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════ STEP 6 — RECAP ═══════════════ -->
+      <div class="card hidden" id="step6">
+        <div class="card-body p-4">
+          <h2 class="text-xl font-bold mb-1">Récapitulatif</h2>
+          <p class="text-muted mb-3">Vérifiez toutes les informations avant de soumettre votre demande.</p>
+
+          <div id="recapContent">
+            <!-- Filled dynamically -->
+          </div>
+
+          <div class="alert alert-info mt-3">
+            <span>⏱️</span>
+            <div>
+              <strong>Délai de vérification : 24 à 48 heures</strong><br>
+              <span class="text-sm">Vous recevrez un SMS de confirmation dès que votre boutique sera approuvée. Vous pourrez alors commencer à ajouter vos produits.</span>
+            </div>
+          </div>
+
+          <div class="form-group mt-3">
+            <label class="form-check">
+              <input type="checkbox" id="acceptTerms">
+              <span>J'accepte les <a href="#" target="_blank">conditions générales</a> et la <a href="#" target="_blank">politique de confidentialité</a> d'Afrimarket</span>
+            </label>
+          </div>
+
+          <div class="flex justify-between mt-3">
+            <button class="btn btn-ghost" onclick="goToStep(5)">← Retour</button>
+            <button class="btn btn-primary btn-lg" id="btnSubmit" disabled onclick="submitRegistration()">
+              Soumettre ma demande
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════ SUCCESS ═══════════════ -->
+      <div class="card hidden" id="stepSuccess">
+        <div class="card-body p-4 text-center">
+          <div style="font-size:4rem;margin-bottom:16px;">🎉</div>
+          <h2 class="text-xl font-bold mb-1">Demande envoyée avec succès !</h2>
+          <p class="text-muted mb-3">Votre demande est en cours de vérification. Vous recevrez un SMS au <strong id="successPhone"></strong> dans les 24 à 48 heures.</p>
+          <div class="alert alert-success">
+            <span>✓</span>
+            <span>Numéro de demande : <strong id="applicationId"></strong></span>
+          </div>
+          <a href="../index.html" class="btn btn-primary mt-3">Retour à l'accueil</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="../js/api.js"></script>
+  <script src="../js/seller-register.js"></script>
+</body>
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tableau de bord — Afrimarket</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="../index.html" class="navbar-brand">🌍 Afri<span>market</span></a>
+      <div class="navbar-actions">
+        <span class="text-sm text-muted" id="sellerName">—</span>
+        <button class="btn btn-ghost btn-sm" onclick="logout()">Déconnexion</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="dashboard">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <ul class="sidebar-nav">
+        <li><a href="#" class="active" data-tab="overview"><span class="nav-icon">📊</span> Vue d'ensemble</a></li>
+        <li><a href="#" data-tab="orders"><span class="nav-icon">📋</span> Commandes</a></li>
+        <li><a href="#" data-tab="products"><span class="nav-icon">📦</span> Produits</a></li>
+        <li><a href="#" data-tab="payments"><span class="nav-icon">💰</span> Paiements</a></li>
+        <li><a href="#" data-tab="settings"><span class="nav-icon">⚙️</span> Paramètres</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- ═══════════════ OVERVIEW TAB ═══════════════ -->
+      <div id="tab-overview">
+        <div class="page-header">
+          <h1 class="page-title">Vue d'ensemble</h1>
+          <span class="text-sm text-muted" id="dashboardDate"></span>
+        </div>
+
+        <!-- Status alert -->
+        <div id="statusAlert" class="hidden"></div>
+
+        <!-- Stats -->
+        <div class="stats-grid" id="statsGrid">
+          <div class="stat-card">
+            <div class="stat-label">Revenu total</div>
+            <div class="stat-value" id="statRevenue">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Commandes</div>
+            <div class="stat-value" id="statOrderCount">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Produits actifs</div>
+            <div class="stat-value" id="statProductCount">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Solde disponible</div>
+            <div class="stat-value" id="statBalance">—</div>
+          </div>
+        </div>
+
+        <!-- Recent orders -->
+        <div class="table-wrapper">
+          <div class="table-header">
+            <span class="table-title">Commandes récentes</span>
+            <a href="#" class="btn btn-ghost btn-sm" onclick="switchTab('orders')">Tout voir</a>
+          </div>
+          <div id="recentOrdersContent">
+            <div class="empty-state">
+              <div class="empty-icon">📋</div>
+              <div class="empty-title">Aucune commande</div>
+              <div class="empty-desc">Vos commandes apparaîtront ici dès qu'un client achète un de vos produits.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════ ORDERS TAB ═══════════════ -->
+      <div id="tab-orders" class="hidden">
+        <div class="page-header">
+          <h1 class="page-title">Commandes</h1>
+          <div class="flex gap-1">
+            <select class="form-select" style="width:auto;" id="orderFilter" onchange="loadOrders()">
+              <option value="">Toutes</option>
+              <option value="pending">En attente</option>
+              <option value="confirmed">Confirmées</option>
+              <option value="shipped">Expédiées</option>
+              <option value="delivered">Livrées</option>
+              <option value="cancelled">Annulées</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>N° Commande</th>
+                <th>Client</th>
+                <th>Produit</th>
+                <th>Montant</th>
+                <th>Statut</th>
+                <th>Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="ordersTableBody">
+              <!-- Loaded by JS -->
+            </tbody>
+          </table>
+          <div id="ordersEmpty" class="empty-state hidden">
+            <div class="empty-icon">📋</div>
+            <div class="empty-title">Aucune commande</div>
+            <div class="empty-desc">Vos commandes apparaîtront ici.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════ PRODUCTS TAB ═══════════════ -->
+      <div id="tab-products" class="hidden">
+        <div class="page-header">
+          <h1 class="page-title">Mes produits</h1>
+          <button class="btn btn-primary" onclick="openAddProduct()">+ Ajouter un produit</button>
+        </div>
+
+        <div class="products-grid" id="myProductsGrid">
+          <!-- Loaded by JS -->
+        </div>
+        <div id="productsEmpty" class="empty-state hidden">
+          <div class="empty-icon">📦</div>
+          <div class="empty-title">Aucun produit</div>
+          <div class="empty-desc">Ajoutez votre premier produit pour commencer à vendre.</div>
+          <button class="btn btn-primary mt-3" onclick="openAddProduct()">Ajouter un produit</button>
+        </div>
+      </div>
+
+      <!-- ═══════════════ PAYMENTS TAB ═══════════════ -->
+      <div id="tab-payments" class="hidden">
+        <div class="page-header">
+          <h1 class="page-title">Paiements</h1>
+          <button class="btn btn-success" id="btnWithdraw" onclick="requestWithdrawal()">Retirer les fonds</button>
+        </div>
+
+        <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);">
+          <div class="stat-card">
+            <div class="stat-label">Solde disponible</div>
+            <div class="stat-value" id="payBalance">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">En attente</div>
+            <div class="stat-value" id="payPending">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Total retiré</div>
+            <div class="stat-value" id="payWithdrawn">—</div>
+          </div>
+        </div>
+
+        <div class="table-wrapper mt-3">
+          <div class="table-header">
+            <span class="table-title">Historique des transactions</span>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Montant</th>
+                <th>Statut</th>
+                <th>Référence</th>
+              </tr>
+            </thead>
+            <tbody id="paymentsTableBody">
+              <!-- Loaded by JS -->
+            </tbody>
+          </table>
+          <div id="paymentsEmpty" class="empty-state hidden">
+            <div class="empty-icon">💰</div>
+            <div class="empty-title">Aucune transaction</div>
+            <div class="empty-desc">Vos revenus et retraits apparaîtront ici.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════ SETTINGS TAB ═══════════════ -->
+      <div id="tab-settings" class="hidden">
+        <div class="page-header">
+          <h1 class="page-title">Paramètres de la boutique</h1>
+        </div>
+        <div class="card">
+          <div class="card-body p-4">
+            <div class="form-group">
+              <label class="form-label">Nom de la boutique</label>
+              <input type="text" class="form-input" id="settShopName">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Description</label>
+              <textarea class="form-textarea" id="settShopDesc"></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Opérateur Mobile Money</label>
+              <select class="form-select" id="settMomoProvider">
+                <option value="orange_money">Orange Money</option>
+                <option value="wave">Wave</option>
+                <option value="mtn_momo">MTN Mobile Money</option>
+                <option value="moov_money">Moov Money</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Numéro Mobile Money</label>
+              <input type="tel" class="form-input" id="settMomoNumber">
+            </div>
+            <button class="btn btn-primary" onclick="saveSettings()">Enregistrer</button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="../js/api.js"></script>
+  <script src="../js/seller-dashboard.js"></script>
+</body>
+</html>
