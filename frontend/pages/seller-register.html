@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ouvrir une boutique — AfriMarket</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/design-system.css">
+  <style>
+  /* ── PAGE LAYOUT ──────────────────────────────────────── */
+  body { background: var(--light); }
+  .reg-page { min-height: 100vh; display: grid; grid-template-columns: 380px 1fr; }
+
+  /* ── SIDEBAR ──────────────────────────────────────────── */
+  .reg-sidebar {
+    background: var(--dark-2); padding: 40px 32px;
+    position: sticky; top: 0; height: 100vh; overflow-y: auto;
+    display: flex; flex-direction: column;
+  }
+  .reg-logo { font-family:var(--font-h); font-size:22px; font-weight:800; color:#fff; display:flex; align-items:center; gap:9px; margin-bottom:40px; }
+  .reg-logo-mark { width:34px; height:34px; background:var(--green); border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:17px; }
+  .reg-logo .accent { color:var(--green-3); }
+
+  /* Steps list */
+  .steps-list { display:flex; flex-direction:column; gap:0; flex:1; }
+  .step-item { display:flex; align-items:flex-start; gap:14px; padding:14px 0; position:relative; }
+  .step-item:not(:last-child)::after {
+    content:''; position:absolute; left:19px; top:46px;
+    width:2px; height:calc(100% - 20px); background:rgba(255,255,255,.12);
+  }
+  .step-item.done::after   { background:var(--green); }
+  .step-item.active::after { background:rgba(255,255,255,.12); }
+
+  .step-dot {
+    width:38px; height:38px; border-radius:50%; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    font-size:14px; font-weight:700; font-family:var(--font-h);
+    background:rgba(255,255,255,.1); color:rgba(255,255,255,.4);
+    border:2px solid rgba(255,255,255,.12); transition:all .25s;
+    position:relative; z-index:1;
+  }
+  .step-item.done   .step-dot { background:var(--green);   color:#fff; border-color:var(--green); }
+  .step-item.active .step-dot { background:var(--gold-light); color:#fff; border-color:var(--gold-light); }
+
+  .step-info { padding-top:8px; }
+  .step-info strong { display:block; font-size:13.5px; font-weight:600; color:rgba(255,255,255,.4); margin-bottom:2px; transition:color .25s; }
+  .step-info span   { font-size:12px; color:rgba(255,255,255,.28); }
+  .step-item.done   .step-info strong { color:rgba(255,255,255,.7); }
+  .step-item.active .step-info strong { color:#fff; }
+  .step-item.active .step-info span   { color:rgba(255,255,255,.55); }
+
+  .sidebar-note {
+    background:rgba(45,155,86,.12); border:1px solid rgba(45,155,86,.25);
+    border-radius:var(--r); padding:16px; margin-top:28px;
+  }
+  .sidebar-note strong { display:block; font-size:13px; color:var(--green-3); margin-bottom:5px; }
+  .sidebar-note p { font-size:12px; color:rgba(255,255,255,.45); line-height:1.6; }
+
+  /* ── FORM AREA ────────────────────────────────────────── */
+  .reg-main { padding: 48px 56px; max-width: 680px; }
+  .step-panel { display:none; }
+  .step-panel.active { display:block; animation:fadeUp .25s ease; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+
+  .step-heading { margin-bottom:32px; }
+  .step-heading .step-num-label { font-size:12px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.6px; margin-bottom:6px; }
+  .step-heading h2 { font-family:var(--font-h); font-size:28px; font-weight:800; margin-bottom:8px; }
+  .step-heading p  { font-size:15px; color:var(--muted); line-height:1.7; }
+
+  /* Progress bar */
+  .progress-bar { height:4px; background:var(--border); border-radius:4px; margin-bottom:40px; overflow:hidden; }
+  .progress-fill { height:100%; background:var(--green); border-radius:4px; transition:width .4s ease; }
+
+  /* Phone OTP */
+  .otp-row { display:flex; gap:8px; }
+  .otp-row input { flex:1; }
+  .otp-send-btn { white-space:nowrap; padding:11px 16px; background:var(--green); color:#fff; border-radius:var(--r); font-size:14px; font-weight:500; cursor:pointer; transition:var(--trans); border:none; }
+  .otp-send-btn:hover { background:var(--dark-2); }
+  .otp-send-btn:disabled { background:var(--muted); cursor:not-allowed; }
+
+  /* OTP boxes */
+  .otp-boxes { display:flex; gap:10px; justify-content:center; margin:20px 0; }
+  .otp-box {
+    width:52px; height:58px; border:2px solid var(--border); border-radius:var(--r);
+    font-size:24px; font-weight:700; text-align:center; font-family:var(--font-h);
+    transition:var(--trans); outline:none;
+  }
+  .otp-box:focus { border-color:var(--green); box-shadow:0 0 0 3px rgba(26,92,53,.1); }
+  .otp-box.filled { border-color:var(--green); }
+
+  /* Verified badge */
+  .verified-badge {
+    display:inline-flex; align-items:center; gap:7px;
+    background:var(--green-pale); border:1px solid rgba(26,92,53,.2);
+    border-radius:var(--r); padding:10px 16px; font-size:14px; color:var(--green); font-weight:500;
+  }
+
+  /* Store type selector */
+  .type-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:24px; }
+  .type-card {
+    border:2px solid var(--border); border-radius:var(--r-lg); padding:22px 20px;
+    cursor:pointer; transition:var(--trans); text-align:center;
+  }
+  .type-card:hover { border-color:var(--green); background:var(--green-pale); }
+  .type-card.selected { border-color:var(--green); background:var(--green-pale); }
+  .type-card .t-icon { font-size:36px; margin-bottom:10px; }
+  .type-card h3 { font-family:var(--font-h); font-size:16px; font-weight:700; margin-bottom:6px; }
+  .type-card p  { font-size:13px; color:var(--muted); line-height:1.5; }
+  .type-card .t-examples { font-size:11px; color:var(--muted); margin-top:8px; }
+
+  /* Document upload */
+  .doc-upload {
+    border:2px dashed var(--border); border-radius:var(--r-lg); padding:28px;
+    text-align:center; cursor:pointer; transition:var(--trans);
+  }
+  .doc-upload:hover { border-color:var(--green); background:var(--green-pale); }
+  .doc-upload.uploaded { border-color:var(--green); background:var(--green-pale); border-style:solid; }
+  .doc-upload input { display:none; }
+  .doc-upload .du-icon { font-size:32px; margin-bottom:10px; }
+  .doc-upload .du-title { font-size:14px; font-weight:500; margin-bottom:4px; }
+  .doc-upload .du-hint  { font-size:12px; color:var(--muted); }
+
+  /* Delivery options */
+  .delivery-opts { display:flex; flex-direction:column; gap:10px; }
+  .delivery-opt {
+    display:flex; align-items:center; gap:14px;
+    border:1.5px solid var(--border); border-radius:var(--r); padding:16px;
+    cursor:pointer; transition:var(--trans);
+  }
+  .delivery-opt:hover  { border-color:var(--green); background:var(--green-pale); }
+  .delivery-opt.active { border-color:var(--green); background:var(--green-pale); }
+  .delivery-opt input[type=checkbox] { width:18px; height:18px; accent-color:var(--green); flex-shrink:0; }
+  .do-icon  { font-size:26px; flex-shrink:0; }
+  .do-info strong { display:block; font-size:14px; font-weight:500; margin-bottom:2px; }
+  .do-info span   { font-size:12px; color:var(--muted); }
+
+  /* Mobile Money verify */
+  .mm-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:18px; }
+  .mm-opt {
+    border:2px solid var(--border); border-radius:var(--r); padding:14px;
+    cursor:pointer; transition:var(--trans); text-align:center;
+  }
+  .mm-opt:hover,.mm-opt.active { border-color:var(--green); background:var(--green-pale); }
+  .mm-opt .mm-icon { font-size:24px; margin-bottom:6px; }
+  .mm-opt strong { display:block; font-size:13px; font-weight:600; }
+
+  /* Review step */
+  .review-block { background:var(--white); border:1px solid var(--border); border-radius:var(--r-lg); padding:20px; margin-bottom:14px; }
+  .review-block h4 { font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.5px; color:var(--muted); margin-bottom:12px; }
+  .review-row { display:flex; justify-content:space-between; font-size:14px; padding:6px 0; border-bottom:1px solid var(--border); }
+  .review-row:last-child { border-bottom:none; }
+  .review-row span:first-child { color:var(--muted); }
+
+  /* Nav buttons */
+  .step-nav { display:flex; align-items:center; justify-content:space-between; margin-top:36px; padding-top:24px; border-top:1px solid var(--border); }
+
+  /* Submit state */
+  .submit-success {
+    text-align:center; padding:48px 24px;
+    display:flex; flex-direction:column; align-items:center; gap:16px;
+  }
+  .submit-icon { font-size:64px; animation:pop .4s ease; }
+  @keyframes pop { 0%{transform:scale(.5)} 80%{transform:scale(1.1)} 100%{transform:scale(1)} }
+
+  /* Responsive */
+  @media(max-width:900px) {
+    .reg-page { grid-template-columns:1fr; }
+    .reg-sidebar { display:none; }
+    .reg-main { padding:32px 24px; }
+  }
+  </style>
+</head>
+<body>
+
+<div class="reg-page">
+
+  <!-- ══ SIDEBAR ═════════════════════════════════════════════ -->
+  <aside class="reg-sidebar">
+    <div class="reg-logo">
+      <div class="reg-logo-mark">🌍</div>
+      Afri<span class="accent">Market</span>
+    </div>
+
+    <div class="steps-list" id="stepsList">
+      <div class="step-item active" data-step="1">
+        <div class="step-dot">1</div>
+        <div class="step-info">
+          <strong>Votre compte</strong>
+          <span>Email · Téléphone OTP</span>
+        </div>
+      </div>
+      <div class="step-item" data-step="2">
+        <div class="step-dot">2</div>
+        <div class="step-info">
+          <strong>Type de boutique</strong>
+          <span>Physique ou Digital</span>
+        </div>
+      </div>
+      <div class="step-item" data-step="3">
+        <div class="step-dot">3</div>
+        <div class="step-info">
+          <strong>Votre boutique</strong>
+          <span>Nom · Description · Catégorie</span>
+        </div>
+      </div>
+      <div class="step-item" data-step="4">
+        <div class="step-dot">4</div>
+        <div class="step-info">
+          <strong>Vérification d'identité</strong>
+          <span>CNI · Passeport · Selfie</span>
+        </div>
+      </div>
+      <div class="step-item" data-step="5">
+        <div class="step-dot">5</div>
+        <div class="step-info">
+          <strong>Paiement & Livraison</strong>
+          <span>Mobile Money · Méthodes</span>
+        </div>
+      </div>
+      <div class="step-item" data-step="6">
+        <div class="step-dot">6</div>
+        <div class="step-info">
+          <strong>Vérification finale</strong>
+          <span>Résumé · Soumettre</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-note">
+      <strong>⏱ Durée d'examen : 24–48h</strong>
+      <p>Notre équipe vérifie chaque candidature manuellement. Vous serez notifié par SMS et email dès l'approbation.</p>
+    </div>
+  </aside>
+
+  <!-- ══ FORM MAIN ════════════════════════════════════════════ -->
+  <main class="reg-main">
+
+    <!-- Progress -->
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill" style="width:16.6%"></div>
+    </div>
+
+    <!-- ─── ÉTAPE 1 : Compte ─────────────────────────────── -->
+    <div class="step-panel active" id="panel-1">
+      <div class="step-heading">
+        <div class="step-num-label">Étape 1 sur 6</div>
+        <h2>Créez votre compte</h2>
+        <p>Commençons par créer votre compte vendeur. Votre numéro de téléphone sera vérifié par SMS.</p>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Prénom <span class="req">*</span></label>
+          <input class="form-input" id="s1_first" placeholder="Moussa" oninput="clearErr(this)">
+          <div class="form-error" id="err_s1_first"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nom <span class="req">*</span></label>
+          <input class="form-input" id="s1_last" placeholder="Traoré" oninput="clearErr(this)">
+          <div class="form-error" id="err_s1_last"></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Adresse email <span class="req">*</span></label>
+        <input class="form-input" id="s1_email" type="email" placeholder="moussa@exemple.com" oninput="clearErr(this)">
+        <div class="form-error" id="err_s1_email"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Numéro de téléphone <span class="req">*</span>
+          <span style="font-size:11px;color:var(--muted);font-weight:400">(sera vérifié par OTP)</span>
+        </label>
+        <div class="otp-row">
+          <select class="form-input" id="s1_dialcode" style="max-width:110px">
+            <option value="+226">🇧🇫 +226</option>
+            <option value="+221">🇸🇳 +221</option>
+            <option value="+225">🇨🇮 +225</option>
+            <option value="+223">🇲🇱 +223</option>
+            <option value="+233">🇬🇭 +233</option>
+            <option value="+234">🇳🇬 +234</option>
+            <option value="+228">🇹🇬 +228</option>
+            <option value="+229">🇧🇯 +229</option>
+          </select>
+          <input class="form-input" id="s1_phone" type="tel" placeholder="70 00 00 00" oninput="clearErr(this)" style="flex:1">
+          <button class="otp-send-btn" id="otpSendBtn" onclick="sendOTP()">Envoyer OTP</button>
+        </div>
+        <div class="form-error" id="err_s1_phone"></div>
+      </div>
+
+      <!-- OTP verification (caché jusqu'à l'envoi) -->
+      <div id="otpSection" style="display:none">
+        <div style="background:var(--gold-pale);border:1px solid rgba(200,146,10,.2);border-radius:var(--r);padding:14px;margin-bottom:18px;font-size:13px;color:var(--gold)">
+          📱 Code envoyé au <strong id="otpPhoneDisplay"></strong>. Valable 10 minutes.
+        </div>
+        <label class="form-label">Entrez le code à 6 chiffres <span class="req">*</span></label>
+        <div class="otp-boxes">
+          <input class="otp-box" id="otp0" maxlength="1" oninput="otpInput(0)" onkeydown="otpKey(0,event)">
+          <input class="otp-box" id="otp1" maxlength="1" oninput="otpInput(1)" onkeydown="otpKey(1,event)">
+          <input class="otp-box" id="otp2" maxlength="1" oninput="otpInput(2)" onkeydown="otpKey(2,event)">
+          <input class="otp-box" id="otp3" maxlength="1" oninput="otpInput(3)" onkeydown="otpKey(3,event)">
+          <input class="otp-box" id="otp4" maxlength="1" oninput="otpInput(4)" onkeydown="otpKey(4,event)">
+          <input class="otp-box" id="otp5" maxlength="1" oninput="otpInput(5)" onkeydown="otpKey(5,event)">
+        </div>
+        <div style="text-align:center">
+          <button onclick="verifyOTP()" class="btn btn-primary" style="min-width:200px" id="otpVerifyBtn">Vérifier le code</button>
+          <div style="margin-top:10px;font-size:13px;color:var(--muted)">
+            Pas reçu ? <button onclick="resendOTP()" style="color:var(--green);background:none;font-size:13px;cursor:pointer;text-decoration:underline" id="resendBtn" disabled>Renvoyer dans <span id="resendTimer">60</span>s</button>
+          </div>
+        </div>
+        <div class="form-error" id="err_otp" style="text-align:center;margin-top:8px"></div>
+      </div>
+
+      <div id="phoneVerifiedBadge" style="display:none;margin-bottom:18px">
+        <div class="verified-badge">✅ Téléphone vérifié — <strong id="verifiedPhone"></strong></div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Mot de passe <span class="req">*</span></label>
+          <input class="form-input" id="s1_pwd" type="password" placeholder="Minimum 8 caractères" oninput="checkPwd()">
+          <div class="form-hint" id="pwdStrength"></div>
+          <div class="form-error" id="err_s1_pwd"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Confirmer le mot de passe <span class="req">*</span></label>
+          <input class="form-input" id="s1_pwd2" type="password" placeholder="Répétez votre mot de passe" oninput="clearErr(this)">
+          <div class="form-error" id="err_s1_pwd2"></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Pays <span class="req">*</span></label>
+        <select class="form-input" id="s1_country">
+          <option value="BF">🇧🇫 Burkina Faso</option>
+          <option value="SN">🇸🇳 Sénégal</option>
+          <option value="CI">🇨🇮 Côte d'Ivoire</option>
+          <option value="ML">🇲🇱 Mali</option>
+          <option value="GH">🇬🇭 Ghana</option>
+          <option value="NG">🇳🇬 Nigéria</option>
+          <option value="TG">🇹🇬 Togo</option>
+          <option value="BJ">🇧🇯 Bénin</option>
+        </select>
+      </div>
+
+      <div style="background:var(--light);border-radius:var(--r);padding:14px;margin-bottom:20px;font-size:13px;color:var(--muted)">
+        🔒 Vos données sont chiffrées et sécurisées. En continuant, vous acceptez nos
+        <a href="../pages/terms.html" style="color:var(--green)">Conditions d'utilisation</a> et notre
+        <a href="../pages/privacy.html" style="color:var(--green)">Politique de confidentialité</a>.
+      </div>
+
+      <div class="step-nav">
+        <a href="../index.html" class="btn btn-secondary">← Retour à l'accueil</a>
+        <button class="btn btn-primary btn-lg" onclick="goStep(2)">Continuer →</button>
+      </div>
+    </div>
+
+    <!-- ─── ÉTAPE 2 : Type de boutique ──────────────────── -->
+    <div class="step-panel" id="panel-2">
+      <div class="step-heading">
+        <div class="step-num-label">Étape 2 sur 6</div>
+        <h2>Type de boutique</h2>
+        <p>Choisissez le type de produits que vous souhaitez vendre. Cela détermine les documents requis et le processus de livraison.</p>
+      </div>
+
+      <div class="type-grid">
+        <div class="type-card selected" id="type-physical" onclick="selectType('physical')">
+          <div class="t-icon">📦</div>
+          <h3>Produits physiques</h3>
+          <p>Vous vendez des objets réels qui seront livrés à l'acheteur.</p>
+          <div class="t-examples">Ex : Vêtements, Téléphones, Aliments, Artisanat...</div>
+        </div>
+        <div class="type-card" id="type-digital" onclick="selectType('digital')">
+          <div class="t-icon">💻</div>
+          <h3>Produits digitaux</h3>
+          <p>Vous vendez des fichiers ou services numériques téléchargeables.</p>
+          <div class="t-examples">Ex : Ebooks, Logiciels, Formations, Templates, Musique...</div>
+        </div>
+      </div>
+
+      <!-- Requirements selon le type -->
+      <div id="type-req-physical">
+        <div style="background:var(--green-pale);border:1px solid rgba(26,92,53,.2);border-radius:var(--r-lg);padding:20px">
+          <h4 style="font-family:var(--font-h);font-size:15px;font-weight:700;margin-bottom:14px">Documents requis pour boutique physique :</h4>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;align-items:center;gap:10px;font-size:14px"><span style="color:var(--green);font-size:18px">✅</span> Numéro de téléphone vérifié par OTP (étape précédente)</div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:14px"><span style="color:var(--green);font-size:18px">📋</span> Pièce d'identité : CNI ou Passeport (photo recto-verso)</div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:14px"><span style="color:var(--green);font-size:18px">🤳</span> Selfie avec votre pièce d'identité</div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:14px"><span style="color:var(--green);font-size:18px">📱</span> Numéro Mobile Money vérifié (pour recevoir vos paiements)</div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:14px"><span style="color:var(--green);font-size:18px">🚚</span> Méthode(s) de livraison que vous proposez</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="type-req-digital" style="display:none">
+        <div style="background:var(--gold-pale);border:1px solid rgba(200,146,10,.2);border-radius:var(--r-lg);padding:20px">
+          <h4 style="font-family:var(--font-h);font-size:15px;font-weight:700;margin-bottom:14px">Documents requis pour boutique digitale :</h4>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;align-items:center;gap:10px;font-size:14px"><span style="color:var(--green);font-size:18px">✅</span> Numéro de téléphone vérifié par OTP (étape précédente)</div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:14px"><span style="color:var(--green);font-size:18px">📋</span> Pièce d'identité : CNI ou Passeport</div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:14px"><span style="color:var(--green);font-size:18px">📱</span> Numéro Mobile Money vérifié</div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:14px"><span style="color:var(--gold);font-size:18px">ℹ️</span> Pas de livraison physique — téléchargement automatique après paiement</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-nav">
+        <button class="btn btn-secondary" onclick="goStep(1)">← Retour</button>
+        <button class="btn btn-primary btn-lg" onclick="goStep(3)">Continuer →</button>
+      </div>
+    </div>
+
+    <!-- ─── ÉTAPE 3 : Infos boutique ─────────────────────── -->
+    <div class="step-panel" id="panel-3">
+      <div class="step-heading">
+        <div class="step-num-label">Étape 3 sur 6</div>
+        <h2>Votre boutique</h2>
+        <p>Donnez une identité à votre boutique. Ces informations seront visibles par vos clients.</p>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Nom de la boutique <span class="req">*</span></label>
+        <input class="form-input" id="s3_name" placeholder="Ex : Moussa Tech Store" maxlength="80" oninput="genSlug()">
+        <div class="form-hint">Entre 3 et 80 caractères. Ce nom apparaîtra sur votre page boutique.</div>
+        <div class="form-error" id="err_s3_name"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">URL de votre boutique <span class="req">*</span></label>
+        <div style="display:flex;align-items:center;border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;transition:var(--trans)" id="slugWrap">
+          <span style="background:var(--light);padding:11px 12px;font-size:13px;color:var(--muted);white-space:nowrap;border-right:1px solid var(--border)">afrimarket.com/boutique/</span>
+          <input style="flex:1;padding:11px 14px;border:none;font-size:14px;outline:none;font-family:var(--font-b)" id="s3_slug" placeholder="moussa-tech-store" oninput="validateSlug()">
+          <span id="slugStatus" style="padding:0 12px;font-size:18px"></span>
+        </div>
+        <div class="form-hint">Uniquement lettres minuscules, chiffres et tirets. Pas d'espaces.</div>
+        <div class="form-error" id="err_s3_slug"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Slogan / Tagline</label>
+        <input class="form-input" id="s3_tagline" placeholder="Ex : Votre expert high-tech au Burkina" maxlength="120">
+        <div class="form-hint">Une phrase courte qui décrit votre boutique (optionnel).</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Description de la boutique <span class="req">*</span></label>
+        <textarea class="form-input" id="s3_desc" rows="4" placeholder="Décrivez vos produits, votre expérience, pourquoi les clients devraient vous choisir..." maxlength="1000" oninput="countChars(this,'s3_desc_count',1000)"></textarea>
+        <div class="form-hint"><span id="s3_desc_count">0</span>/1000 caractères</div>
+        <div class="form-error" id="err_s3_desc"></div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Catégorie principale <span class="req">*</span></label>
+          <select class="form-input" id="s3_cat">
+            <option value="">-- Sélectionnez --</option>
+            <option value="electronics">📱 Électronique & Téléphones</option>
+            <option value="fashion">👗 Mode & Vêtements</option>
+            <option value="food">🥗 Alimentation & Agriculture</option>
+            <option value="beauty">💄 Beauté & Soins</option>
+            <option value="home">🏠 Maison & Décoration</option>
+            <option value="health">⚕️ Santé & Bien-être</option>
+            <option value="auto">🚗 Automobile</option>
+            <option value="crafts">🎨 Artisanat & Art</option>
+            <option value="kids">🧸 Enfants & Jouets</option>
+            <option value="digital">💻 Produits digitaux</option>
+          </select>
+          <div class="form-error" id="err_s3_cat"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Numéro WhatsApp boutique</label>
+          <input class="form-input" id="s3_wa" type="tel" placeholder="+226 70 00 00 00">
+          <div class="form-hint">Les clients pourront vous contacter directement.</div>
+        </div>
+      </div>
+
+      <div class="step-nav">
+        <button class="btn btn-secondary" onclick="goStep(2)">← Retour</button>
+        <button class="btn btn-primary btn-lg" onclick="goStep(4)">Continuer →</button>
+      </div>
+    </div>
+
+    <!-- ─── ÉTAPE 4 : Identité ───────────────────────────── -->
+    <div class="step-panel" id="panel-4">
+      <div class="step-heading">
+        <div class="step-num-label">Étape 4 sur 6</div>
+        <h2>Vérification d'identité</h2>
+        <p>Pour garantir la sécurité de tous les utilisateurs, nous vérifions l'identité de chaque vendeur. Vos documents sont chiffrés et traités de façon confidentielle.</p>
+      </div>
+
+      <div style="background:var(--light);border-radius:var(--r);padding:14px 16px;margin-bottom:24px;font-size:13px;color:var(--muted);display:flex;align-items:flex-start;gap:10px">
+        <span style="font-size:18px">🔒</span>
+        <span>Vos documents sont chiffrés (AES-256) et stockés sur des serveurs sécurisés. Ils ne sont utilisés que pour la vérification d'identité et ne sont jamais partagés avec des tiers.</span>
+      </div>
+
+      <!-- Type de document -->
+      <div class="form-group">
+        <label class="form-label">Type de document <span class="req">*</span></label>
+        <select class="form-input" id="s4_doctype" onchange="updateDocLabel()">
+          <option value="cni">Carte Nationale d'Identité (CNI)</option>
+          <option value="passport">Passeport</option>
+          <option value="residence">Titre de séjour</option>
+        </select>
+      </div>
+
+      <!-- Recto -->
+      <div class="form-group">
+        <label class="form-label" id="docFrontLabel">CNI — Face avant (recto) <span class="req">*</span></label>
+        <div class="doc-upload" id="uploadFront" onclick="triggerUpload('fileFront')">
+          <input type="file" id="fileFront" accept="image/*,.pdf" onchange="handleUpload('fileFront','uploadFront','frontStatus')">
+          <div class="du-icon">📄</div>
+          <div class="du-title">Cliquez ou glissez votre fichier ici</div>
+          <div class="du-hint">JPG, PNG ou PDF — Max 5 Mo</div>
+          <div id="frontStatus" style="margin-top:10px;font-size:13px;color:var(--green);display:none"></div>
+        </div>
+        <div class="form-error" id="err_front"></div>
+      </div>
+
+      <!-- Verso (seulement CNI) -->
+      <div class="form-group" id="versoSection">
+        <label class="form-label">CNI — Face arrière (verso) <span class="req">*</span></label>
+        <div class="doc-upload" id="uploadBack" onclick="triggerUpload('fileBack')">
+          <input type="file" id="fileBack" accept="image/*,.pdf" onchange="handleUpload('fileBack','uploadBack','backStatus')">
+          <div class="du-icon">📄</div>
+          <div class="du-title">Cliquez ou glissez votre fichier ici</div>
+          <div class="du-hint">JPG, PNG ou PDF — Max 5 Mo</div>
+          <div id="backStatus" style="margin-top:10px;font-size:13px;color:var(--green);display:none"></div>
+        </div>
+        <div class="form-error" id="err_back"></div>
+      </div>
+
+      <!-- Selfie -->
+      <div class="form-group">
+        <label class="form-label">Selfie avec votre pièce d'identité <span class="req">*</span></label>
+        <div style="background:var(--gold-pale);border:1px solid rgba(200,146,10,.2);border-radius:var(--r);padding:14px;margin-bottom:12px;font-size:13px;color:var(--gold)">
+          📸 Prenez une photo de vous en tenant votre CNI/passeport bien visible, avec votre visage et le document lisible sur la même photo.
+        </div>
+        <div class="doc-upload" id="uploadSelfie" onclick="triggerUpload('fileSelfie')">
+          <input type="file" id="fileSelfie" accept="image/*" capture="user" onchange="handleUpload('fileSelfie','uploadSelfie','selfieStatus')">
+          <div class="du-icon">🤳</div>
+          <div class="du-title">Prendre ou choisir une photo</div>
+          <div class="du-hint">JPG ou PNG — Max 5 Mo — Visage et document visibles</div>
+          <div id="selfieStatus" style="margin-top:10px;font-size:13px;color:var(--green);display:none"></div>
+        </div>
+        <div class="form-error" id="err_selfie"></div>
+      </div>
+
+      <div class="step-nav">
+        <button class="btn btn-secondary" onclick="goStep(3)">← Retour</button>
+        <button class="btn btn-primary btn-lg" onclick="goStep(5)">Continuer →</button>
+      </div>
+    </div>
+
+    <!-- ─── ÉTAPE 5 : Paiement & Livraison ───────────────── -->
+    <div class="step-panel" id="panel-5">
+      <div class="step-heading">
+        <div class="step-num-label">Étape 5 sur 6</div>
+        <h2>Paiement & Livraison</h2>
+        <p>Configurez comment vous recevrez vos paiements et comment vous livrerez vos commandes.</p>
+      </div>
+
+      <!-- PAIEMENT -->
+      <h3 style="font-family:var(--font-h);font-size:17px;font-weight:700;margin-bottom:14px">📱 Mobile Money — Comment recevrez-vous vos paiements ?</h3>
+      <div class="mm-grid">
+        <div class="mm-opt active" id="mm-orange" onclick="selectMM('orange')">
+          <div class="mm-icon">📱</div>
+          <strong>Orange Money</strong>
+        </div>
+        <div class="mm-opt" id="mm-wave" onclick="selectMM('wave')">
+          <div class="mm-icon">💳</div>
+          <strong>Wave</strong>
+        </div>
+        <div class="mm-opt" id="mm-mtn" onclick="selectMM('mtn')">
+          <div class="mm-icon">📶</div>
+          <strong>MTN MoMo</strong>
+        </div>
+        <div class="mm-opt" id="mm-moov" onclick="selectMM('moov')">
+          <div class="mm-icon">💎</div>
+          <strong>Moov Money</strong>
+        </div>
+      </div>
+
+      <div class="form-row" style="margin-bottom:8px">
+        <div class="form-group">
+          <label class="form-label">Numéro Mobile Money <span class="req">*</span></label>
+          <div class="otp-row">
+            <input class="form-input" id="s5_mm_phone" type="tel" placeholder="+226 70 00 00 00" style="flex:1">
+            <button class="otp-send-btn" id="mmOtpBtn" onclick="sendMmOTP()">Vérifier</button>
+          </div>
+          <div class="form-hint">Ce numéro recevra vos paiements. Il doit correspondre à votre compte Mobile Money.</div>
+          <div class="form-error" id="err_s5_mm"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nom sur le compte Mobile Money <span class="req">*</span></label>
+          <input class="form-input" id="s5_mm_name" placeholder="Nom enregistré sur le compte">
+          <div class="form-hint">Doit correspondre exactement au nom sur votre Mobile Money.</div>
+        </div>
+      </div>
+
+      <div id="mmVerifiedBadge" style="display:none;margin-bottom:20px">
+        <div class="verified-badge">✅ Mobile Money vérifié — <strong id="mmVerifiedNum"></strong></div>
+      </div>
+
+      <!-- LIVRAISON — masqué pour digital -->
+      <div id="deliverySection">
+        <div class="divider" style="margin:24px 0"></div>
+        <h3 style="font-family:var(--font-h);font-size:17px;font-weight:700;margin-bottom:6px">🚚 Méthodes de livraison</h3>
+        <p style="font-size:14px;color:var(--muted);margin-bottom:18px">Sélectionnez toutes les méthodes de livraison que vous proposez à vos clients. Vous pourrez définir les tarifs plus tard.</p>
+
+        <div class="delivery-opts">
+          <label class="delivery-opt" onclick="toggleDelivery(this)">
+            <input type="checkbox" name="delivery" value="pickup" id="del_pickup">
+            <span class="do-icon">🏪</span>
+            <div class="do-info">
+              <strong>Retrait en boutique / remise en main propre</strong>
+              <span>Le client vient récupérer sa commande directement</span>
+            </div>
+          </label>
+          <label class="delivery-opt" onclick="toggleDelivery(this)">
+            <input type="checkbox" name="delivery" value="local" id="del_local">
+            <span class="do-icon">🛵</span>
+            <div class="do-info">
+              <strong>Livraison locale (votre ville)</strong>
+              <span>Livraison dans votre ville uniquement</span>
+            </div>
+          </label>
+          <label class="delivery-opt" onclick="toggleDelivery(this)">
+            <input type="checkbox" name="delivery" value="national" id="del_national">
+            <span class="do-icon">🚐</span>
+            <div class="do-info">
+              <strong>Livraison nationale</strong>
+              <span>Livraison dans tout votre pays via transporteur</span>
+            </div>
+          </label>
+          <label class="delivery-opt" onclick="toggleDelivery(this)">
+            <input type="checkbox" name="delivery" value="international" id="del_international">
+            <span class="do-icon">✈️</span>
+            <div class="do-info">
+              <strong>Livraison internationale (Afrique)</strong>
+              <span>Expédition vers d'autres pays africains</span>
+            </div>
+          </label>
+          <label class="delivery-opt" onclick="toggleDelivery(this)">
+            <input type="checkbox" name="delivery" value="partner" id="del_partner">
+            <span class="do-icon">📦</span>
+            <div class="do-info">
+              <strong>Via transporteur partenaire AfriMarket</strong>
+              <span>Nous gérons la logistique — tarifs négociés</span>
+            </div>
+          </label>
+        </div>
+        <div class="form-error" id="err_delivery"></div>
+
+        <div class="form-group" style="margin-top:18px">
+          <label class="form-label">Délai de traitement des commandes <span class="req">*</span></label>
+          <select class="form-input" id="s5_processing">
+            <option value="same_day">Expédition le jour même</option>
+            <option value="1_day" selected>1 jour ouvrable</option>
+            <option value="2_3_days">2-3 jours ouvrables</option>
+            <option value="1_week">Jusqu'à 1 semaine</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="step-nav">
+        <button class="btn btn-secondary" onclick="goStep(4)">← Retour</button>
+        <button class="btn btn-primary btn-lg" onclick="goStep(6)">Continuer →</button>
+      </div>
+    </div>
+
+    <!-- ─── ÉTAPE 6 : Récapitulatif ──────────────────────── -->
+    <div class="step-panel" id="panel-6">
+      <div class="step-heading">
+        <div class="step-num-label">Étape 6 sur 6</div>
+        <h2>Vérification finale</h2>
+        <p>Vérifiez toutes vos informations avant de soumettre votre candidature. Notre équipe l'examinera sous 24 à 48 heures.</p>
+      </div>
+
+      <div class="review-block">
+        <h4>Votre compte</h4>
+        <div class="review-row"><span>Nom</span><span id="rv_name">—</span></div>
+        <div class="review-row"><span>Email</span><span id="rv_email">—</span></div>
+        <div class="review-row"><span>Téléphone vérifié</span><span id="rv_phone">—</span></div>
+        <div class="review-row"><span>Pays</span><span id="rv_country">—</span></div>
+      </div>
+
+      <div class="review-block">
+        <h4>Votre boutique</h4>
+        <div class="review-row"><span>Type</span><span id="rv_type">—</span></div>
+        <div class="review-row"><span>Nom</span><span id="rv_store_name">—</span></div>
+        <div class="review-row"><span>URL</span><span id="rv_slug">—</span></div>
+        <div class="review-row"><span>Catégorie</span><span id="rv_cat">—</span></div>
+      </div>
+
+      <div class="review-block">
+        <h4>Paiement & Documents</h4>
+        <div class="review-row"><span>Mobile Money</span><span id="rv_mm">—</span></div>
+        <div class="review-row"><span>Document d'identité</span><span id="rv_doc">—</span></div>
+        <div class="review-row" id="rv_delivery_row"><span>Livraison</span><span id="rv_delivery">—</span></div>
+      </div>
+
+      <div style="background:var(--gold-pale);border:1px solid rgba(200,146,10,.2);border-radius:var(--r-lg);padding:18px;margin-bottom:24px">
+        <h4 style="font-family:var(--font-h);font-size:14px;font-weight:700;margin-bottom:10px">⏱ Processus de vérification</h4>
+        <div style="font-size:13px;color:var(--dark);display:flex;flex-direction:column;gap:7px">
+          <div>1. Notre équipe examine votre dossier sous <strong>24–48h ouvrables</strong></div>
+          <div>2. Vous recevez un SMS et un email avec la décision</div>
+          <div>3. Si approuvé : accès immédiat au tableau de bord vendeur</div>
+          <div>4. Si refusé : motif expliqué et possibilité de corriger et re-soumettre</div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:20px">
+        <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:14px">
+          <input type="checkbox" id="s6_terms" style="margin-top:2px;width:16px;height:16px;accent-color:var(--green);flex-shrink:0">
+          <span>J'accepte les <a href="../pages/terms.html" style="color:var(--green)">Conditions d'utilisation vendeur</a>, la commission de <strong>5%</strong> sur chaque vente, et je certifie que toutes les informations fournies sont exactes et authentiques.</span>
+        </label>
+        <div class="form-error" id="err_terms"></div>
+      </div>
+
+      <div class="step-nav">
+        <button class="btn btn-secondary" onclick="goStep(5)">← Retour</button>
+        <button class="btn btn-primary btn-lg" id="submitBtn" onclick="submitApplication()" style="min-width:220px">
+          🚀 Soumettre ma candidature
+        </button>
+      </div>
+    </div>
+
+    <!-- ─── SUCCÈS ────────────────────────────────────────── -->
+    <div class="step-panel" id="panel-success">
+      <div class="submit-success">
+        <div class="submit-icon">🎉</div>
+        <h2 style="font-family:var(--font-h);font-size:28px;font-weight:800">Candidature soumise !</h2>
+        <p style="font-size:15px;color:var(--muted);max-width:440px;text-align:center">
+          Votre dossier a bien été reçu. Notre équipe l'examinera sous <strong>24 à 48 heures ouvrables</strong>.
+          Vous serez notifié par SMS au <strong id="successPhone"></strong> et par email.
+        </p>
+        <div style="background:var(--green-pale);border:1px solid rgba(26,92,53,.2);border-radius:var(--r-lg);padding:20px;width:100%;max-width:400px;margin:10px 0">
+          <div style="font-size:13px;color:var(--dark);display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;align-items:center;gap:10px">✅ <span>Dossier transmis à notre équipe de vérification</span></div>
+            <div style="display:flex;align-items:center;gap:10px">⏱ <span>Délai d'examen : 24–48h ouvrables</span></div>
+            <div style="display:flex;align-items:center;gap:10px">📱 <span>Notification par SMS et email</span></div>
+            <div style="display:flex;align-items:center;gap:10px">🏪 <span>Accès boutique dès approbation</span></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px">
+          <a href="../index.html" class="btn btn-secondary">Retour à l'accueil</a>
+          <a href="seller-dashboard.html" class="btn btn-primary">Préparer ma boutique</a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+window.AM_API_URL = 'http://localhost:3000/api';
+</script>
+<script src="../assets/js/app.js"></script>
+<script>
+/* ── État global du formulaire ─────────────────────────── */
+const form = {
+  step: 1,
+  phoneVerified:  false,
+  mmVerified:     false,
+  storeType:      'physical',
+  uploads:        { front: null, back: null, selfie: null },
+  selectedMM:     'orange',
+  otpSent:        false,
+  mmOtpSent:      false,
+};
+let resendInterval = null;
+
+/* ── Navigation entre étapes ──────────────────────────── */
+function goStep(n) {
+  if (n > form.step && !validateStep(form.step)) return;
+  const prev = form.step; form.step = n;
+  document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + (n === 7 ? 'success' : n))?.classList.add('active');
+  const fill = Math.round((n / 6) * 100);
+  document.getElementById('progressFill').style.width = fill + '%';
+  updateSidebarSteps(prev, n);
+  window.scrollTo(0, 0);
+}
+
+function updateSidebarSteps(prev, curr) {
+  document.querySelectorAll('.step-item').forEach((el, i) => {
+    const s = i + 1;
+    el.classList.remove('active', 'done');
+    if (s < curr) el.classList.add('done');
+    else if (s === curr) el.classList.add('active');
+    const dot = el.querySelector('.step-dot');
+    if (s < curr) dot.textContent = '✓';
+    else dot.textContent = s;
+  });
+}
+
+/* ── Validation par étape ─────────────────────────────── */
+function validateStep(step) {
+  clearAllErrors();
+  if (step === 1) return validateStep1();
+  if (step === 2) return true; // type sélection toujours valide
+  if (step === 3) return validateStep3();
+  if (step === 4) return validateStep4();
+  if (step === 5) return validateStep5();
+  if (step === 6) return validateStep6();
+  return true;
+}
+
+function validateStep1() {
+  let ok = true;
+  if (!v('s1_first', 2, 'Prénom requis (min 2 caractères)')) ok = false;
+  if (!v('s1_last',  2, 'Nom requis (min 2 caractères)'))   ok = false;
+  if (!vEmail('s1_email')) ok = false;
+  if (!v('s1_phone', 6, 'Numéro de téléphone requis')) ok = false;
+  if (!form.phoneVerified) { showErr('err_s1_phone', 'Vérifiez votre numéro de téléphone par OTP.'); ok = false; }
+  const pwd = document.getElementById('s1_pwd')?.value || '';
+  if (pwd.length < 8) { showErr('err_s1_pwd', 'Mot de passe : minimum 8 caractères.'); ok = false; }
+  const pwd2 = document.getElementById('s1_pwd2')?.value || '';
+  if (pwd !== pwd2) { showErr('err_s1_pwd2', 'Les mots de passe ne correspondent pas.'); ok = false; }
+  return ok;
+}
+
+function validateStep3() {
+  let ok = true;
+  if (!v('s3_name', 3, 'Nom de boutique requis (min 3 caractères)')) ok = false;
+  const slug = document.getElementById('s3_slug')?.value || '';
+  if (!/^[a-z0-9][a-z0-9-]{1,}[a-z0-9]$/.test(slug)) { showErr('err_s3_slug', 'URL invalide. Utilisez uniquement a-z, 0-9 et tirets (min 3 chars).'); ok = false; }
+  if (!v('s3_desc', 20, 'Description requise (min 20 caractères)')) ok = false;
+  const cat = document.getElementById('s3_cat')?.value;
+  if (!cat) { showErr('err_s3_cat', 'Sélectionnez une catégorie.'); ok = false; }
+  return ok;
+}
+
+function validateStep4() {
+  let ok = true;
+  if (!form.uploads.front) { showErr('err_front', 'Veuillez téléverser votre document recto.'); ok = false; }
+  if (document.getElementById('versoSection').style.display !== 'none' && !form.uploads.back) {
+    showErr('err_back', 'Veuillez téléverser le verso de votre CNI.'); ok = false;
+  }
+  if (!form.uploads.selfie) { showErr('err_selfie', 'Veuillez téléverser votre selfie avec votre pièce d\'identité.'); ok = false; }
+  return ok;
+}
+
+function validateStep5() {
+  let ok = true;
+  if (!form.mmVerified) { showErr('err_s5_mm', 'Vérifiez votre numéro Mobile Money.'); ok = false; }
+  if (form.storeType === 'physical') {
+    const checked = document.querySelectorAll('input[name="delivery"]:checked');
+    if (checked.length === 0) { showErr('err_delivery', 'Sélectionnez au moins une méthode de livraison.'); ok = false; }
+  }
+  return ok;
+}
+
+function validateStep6() {
+  if (!document.getElementById('s6_terms')?.checked) {
+    showErr('err_terms', 'Vous devez accepter les conditions d\'utilisation.'); return false;
+  }
+  return true;
+}
+
+/* ── OTP Téléphone ────────────────────────────────────── */
+async function sendOTP() {
+  const dial  = document.getElementById('s1_dialcode')?.value || '+226';
+  const phone = document.getElementById('s1_phone')?.value.trim();
+  if (!phone || phone.length < 6) { showErr('err_s1_phone', 'Entrez un numéro valide.'); return; }
+  const fullPhone = dial + phone.replace(/\s/g,'');
+  const btn = document.getElementById('otpSendBtn');
+  btn.disabled = true; btn.textContent = 'Envoi...';
+  try {
+    await AM.auth.sendOTP(fullPhone);
+    document.getElementById('otpSection').style.display = 'block';
+    document.getElementById('otpPhoneDisplay').textContent = fullPhone;
+    form.otpSent = true;
+    btn.textContent = 'Renvoyé ✓';
+    startResendTimer();
+  } catch (e) {
+    btn.disabled = false; btn.textContent = 'Envoyer OTP';
+    showErr('err_s1_phone', e.message || 'Impossible d\'envoyer l\'OTP. Réessayez.');
+  }
+}
+
+function startResendTimer() {
+  let t = 60;
+  const el = document.getElementById('resendTimer');
+  const btn = document.getElementById('resendBtn');
+  btn.disabled = true;
+  clearInterval(resendInterval);
+  resendInterval = setInterval(() => {
+    t--;
+    if (el) el.textContent = t;
+    if (t <= 0) {
+      clearInterval(resendInterval);
+      btn.disabled = false;
+      btn.innerHTML = 'Renvoyer le code';
+    }
+  }, 1000);
+}
+
+function resendOTP() { sendOTP(); }
+
+function otpInput(i) {
+  const el = document.getElementById('otp' + i);
+  el.classList.toggle('filled', el.value !== '');
+  if (el.value && i < 5) document.getElementById('otp' + (i+1))?.focus();
+  if (getOTPValue().length === 6) verifyOTP();
+}
+
+function otpKey(i, e) {
+  if (e.key === 'Backspace' && !document.getElementById('otp'+i).value && i > 0) {
+    document.getElementById('otp'+(i-1))?.focus();
+  }
+}
+
+function getOTPValue() {
+  return [0,1,2,3,4,5].map(i => document.getElementById('otp'+i)?.value || '').join('');
+}
+
+async function verifyOTP() {
+  const code = getOTPValue();
+  if (code.length < 6) { showErr('err_otp', 'Entrez les 6 chiffres.'); return; }
+  const dial  = document.getElementById('s1_dialcode')?.value || '+226';
+  const phone = (dial + document.getElementById('s1_phone')?.value.replace(/\s/g,'')).trim();
+  const btn = document.getElementById('otpVerifyBtn');
+  btn.disabled = true; btn.textContent = 'Vérification...';
+  try {
+    await AM.auth.verifyOTP(phone, code);
+    form.phoneVerified = true;
+    document.getElementById('otpSection').style.display = 'none';
+    document.getElementById('phoneVerifiedBadge').style.display = 'block';
+    document.getElementById('verifiedPhone').textContent = phone;
+    AM.toast('✅ Téléphone vérifié', 'success');
+  } catch (e) {
+    btn.disabled = false; btn.textContent = 'Vérifier le code';
+    showErr('err_otp', e.message || 'Code incorrect ou expiré.');
+    [0,1,2,3,4,5].forEach(i => { const el = document.getElementById('otp'+i); if(el){el.value='';el.classList.remove('filled');} });
+    document.getElementById('otp0')?.focus();
+  }
+}
+
+/* ── Type boutique ────────────────────────────────────── */
+function selectType(type) {
+  form.storeType = type;
+  document.getElementById('type-physical').classList.toggle('selected', type==='physical');
+  document.getElementById('type-digital').classList.toggle('selected', type==='digital');
+  document.getElementById('type-req-physical').style.display = type==='physical' ? 'block' : 'none';
+  document.getElementById('type-req-digital').style.display  = type==='digital'  ? 'block' : 'none';
+  document.getElementById('deliverySection').style.display   = type==='physical' ? 'block' : 'none';
+}
+
+/* ── Slug auto-génération ─────────────────────────────── */
+function genSlug() {
+  const name = document.getElementById('s3_name')?.value || '';
+  const slug = AM.fmt.slug(name);
+  const el = document.getElementById('s3_slug');
+  if (el) el.value = slug;
+  validateSlug();
+}
+
+let slugTimer;
+function validateSlug() {
+  clearTimeout(slugTimer);
+  const slug = document.getElementById('s3_slug')?.value || '';
+  const status = document.getElementById('slugStatus');
+  if (!slug) { if(status) status.textContent = ''; return; }
+  if (!/^[a-z0-9][a-z0-9-]*[a-z0-9]$/.test(slug) || slug.length < 3) {
+    if(status) status.textContent = '❌'; return;
+  }
+  if(status) status.textContent = '⏳';
+  slugTimer = setTimeout(async () => {
+    try {
+      await AM.get('/stores/check-slug/' + slug);
+      if(status) status.textContent = '✅';
+    } catch {
+      if(status) status.textContent = '❌';
+      showErr('err_s3_slug', 'Cette URL est déjà prise. Choisissez-en une autre.');
+    }
+  }, 600);
+}
+
+/* ── Upload documents ─────────────────────────────────── */
+function triggerUpload(inputId) { document.getElementById(inputId)?.click(); }
+
+function handleUpload(inputId, zoneId, statusId) {
+  const file = document.getElementById(inputId)?.files?.[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) {
+    AM.toast('Fichier trop volumineux (max 5 Mo)', 'error'); return;
+  }
+  const key = inputId.replace('file', '').toLowerCase();
+  form.uploads[key === 'front' ? 'front' : key === 'back' ? 'back' : 'selfie'] = file;
+  const zone = document.getElementById(zoneId);
+  const stat = document.getElementById(statusId);
+  if(zone) zone.classList.add('uploaded');
+  if(stat) { stat.textContent = '✅ ' + file.name + ' (' + (file.size/1024).toFixed(0) + ' Ko)'; stat.style.display='block'; }
+}
+
+function updateDocLabel() {
+  const type = document.getElementById('s4_doctype')?.value;
+  const lbl  = document.getElementById('docFrontLabel');
+  const back = document.getElementById('versoSection');
+  if (type === 'passport')   { if(lbl) lbl.innerHTML = 'Passeport — Page photo <span class="req">*</span>'; if(back) back.style.display='none'; }
+  else if (type === 'cni')   { if(lbl) lbl.innerHTML = 'CNI — Face avant (recto) <span class="req">*</span>'; if(back) back.style.display='block'; }
+  else                       { if(lbl) lbl.innerHTML = 'Titre de séjour — Recto <span class="req">*</span>'; if(back) back.style.display='block'; }
+}
+
+/* ── Mobile Money ─────────────────────────────────────── */
+function selectMM(id) {
+  form.selectedMM = id;
+  ['orange','wave','mtn','moov'].forEach(m => document.getElementById('mm-'+m)?.classList.toggle('active', m===id));
+}
+
+async function sendMmOTP() {
+  const phone = document.getElementById('s5_mm_phone')?.value.trim();
+  if (!phone || phone.length < 8) { showErr('err_s5_mm','Entrez un numéro valide.'); return; }
+  const btn = document.getElementById('mmOtpBtn');
+  btn.disabled = true; btn.textContent = 'Envoi...';
+  try {
+    await AM.post('/auth/otp/send', { phone, purpose: 'mobile_money' });
+    form.mmVerified = true; // Simulated for demo
+    document.getElementById('mmVerifiedBadge').style.display = 'block';
+    document.getElementById('mmVerifiedNum').textContent = phone + ' (' + form.selectedMM + ')';
+    btn.textContent = 'Vérifié ✓';
+    AM.toast('✅ Mobile Money vérifié', 'success');
+  } catch (e) {
+    btn.disabled = false; btn.textContent = 'Vérifier';
+    showErr('err_s5_mm', e.message || 'Erreur de vérification.');
+  }
+}
+
+/* ── Livraison toggle ─────────────────────────────────── */
+function toggleDelivery(el) {
+  const cb = el.querySelector('input[type=checkbox]');
+  if (cb) { setTimeout(() => el.classList.toggle('active', cb.checked), 0); }
+}
+
+/* ── Compteur caractères ──────────────────────────────── */
+function countChars(el, counterId, max) {
+  const c = document.getElementById(counterId);
+  if (c) c.textContent = el.value.length;
+  if (el.value.length > max) el.value = el.value.slice(0, max);
+}
+
+/* ── Mot de passe force ───────────────────────────────── */
+function checkPwd() {
+  const pwd = document.getElementById('s1_pwd')?.value || '';
+  const el  = document.getElementById('pwdStrength');
+  if (!el || !pwd) { if(el) el.textContent=''; return; }
+  let score = 0;
+  if (pwd.length >= 8)  score++;
+  if (/[A-Z]/.test(pwd)) score++;
+  if (/[0-9]/.test(pwd)) score++;
+  if (/[^a-zA-Z0-9]/.test(pwd)) score++;
+  const levels = ['','Faible','Moyen','Fort','Très fort'];
+  const colors = ['','var(--red)','var(--orange)','var(--gold)','var(--green)'];
+  el.textContent = score > 0 ? 'Force : ' + (levels[score] || 'Faible') : '';
+  el.style.color = colors[score] || 'var(--muted)';
+}
+
+/* ── Récap step 6 ─────────────────────────────────────── */
+function fillReview() {
+  const set = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
+  const first = document.getElementById('s1_first')?.value || '';
+  const last  = document.getElementById('s1_last')?.value  || '';
+  const dial  = document.getElementById('s1_dialcode')?.value || '+226';
+  const phone = document.getElementById('s1_phone')?.value  || '';
+  const countryOpt = document.getElementById('s1_country');
+  const countryTxt = countryOpt?.options[countryOpt.selectedIndex]?.text || '';
+  set('rv_name',    first + ' ' + last);
+  set('rv_email',   document.getElementById('s1_email')?.value || '—');
+  set('rv_phone',   form.phoneVerified ? (dial + phone + ' ✅') : '❌ Non vérifié');
+  set('rv_country', countryTxt);
+  set('rv_type',    form.storeType === 'physical' ? '📦 Produits physiques' : '💻 Produits digitaux');
+  set('rv_store_name', document.getElementById('s3_name')?.value || '—');
+  set('rv_slug',    'afrimarket.com/boutique/' + (document.getElementById('s3_slug')?.value || '—'));
+  const catOpt = document.getElementById('s3_cat');
+  set('rv_cat', catOpt?.options[catOpt.selectedIndex]?.text || '—');
+  set('rv_mm', form.mmVerified ? (document.getElementById('s5_mm_phone')?.value + ' (' + form.selectedMM + ') ✅') : '❌ Non vérifié');
+  const docOpt = document.getElementById('s4_doctype');
+  set('rv_doc', docOpt?.options[docOpt.selectedIndex]?.text || '—');
+  if (form.storeType === 'digital') {
+    const row = document.getElementById('rv_delivery_row');
+    if(row) row.style.display = 'none';
+  } else {
+    const dels = [...document.querySelectorAll('input[name="delivery"]:checked')].map(c => c.value).join(', ') || '—';
+    set('rv_delivery', dels);
+  }
+}
+
+// Intercepter goStep 6 pour remplir le récap
+const _origGoStep = goStep;
+// Override pour remplir récap à step 6
+window.goStep = function(n) {
+  if (n === 6 && form.step === 5) fillReview();
+  _origGoStep(n);
+};
+
+/* ── Soumission finale ────────────────────────────────── */
+async function submitApplication() {
+  if (!validateStep(6)) return;
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true; btn.textContent = '⏳ Envoi en cours...';
+
+  const payload = {
+    personal: {
+      firstName: document.getElementById('s1_first')?.value,
+      lastName:  document.getElementById('s1_last')?.value,
+      email:     document.getElementById('s1_email')?.value,
+      phone:     (document.getElementById('s1_dialcode')?.value || '') + document.getElementById('s1_phone')?.value,
+      country:   document.getElementById('s1_country')?.value,
+      password:  document.getElementById('s1_pwd')?.value,
+    },
+    store: {
+      name:     document.getElementById('s3_name')?.value,
+      slug:     document.getElementById('s3_slug')?.value,
+      tagline:  document.getElementById('s3_tagline')?.value,
+      desc:     document.getElementById('s3_desc')?.value,
+      category: document.getElementById('s3_cat')?.value,
+      whatsapp: document.getElementById('s3_wa')?.value,
+      type:     form.storeType,
+    },
+    payment: {
+      provider: form.selectedMM,
+      phone:    document.getElementById('s5_mm_phone')?.value,
+      name:     document.getElementById('s5_mm_name')?.value,
+    },
+    delivery: form.storeType === 'physical'
+      ? [...document.querySelectorAll('input[name="delivery"]:checked')].map(c => c.value)
+      : ['digital'],
+    processing: document.getElementById('s5_processing')?.value,
+  };
+
+  try {
+    // Pour les fichiers, on utiliserait FormData dans un vrai déploiement
+    await AM.post('/sellers/apply', payload);
+    document.getElementById('successPhone').textContent = payload.personal.phone;
+    goStep(7);
+  } catch (e) {
+    btn.disabled = false; btn.textContent = '🚀 Soumettre ma candidature';
+    AM.toast(e.message || 'Erreur lors de la soumission. Réessayez.', 'error');
+  }
+}
+
+/* ── Helpers ──────────────────────────────────────────── */
+function v(id, minLen, errMsg) {
+  const val = document.getElementById(id)?.value.trim() || '';
+  if (val.length < minLen) { showErr('err_' + id, errMsg); return false; }
+  return true;
+}
+function vEmail(id) {
+  const val = document.getElementById(id)?.value.trim() || '';
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) { showErr('err_' + id, 'Adresse email invalide.'); return false; }
+  return true;
+}
+function showErr(id, msg) {
+  const el = document.getElementById(id);
+  if (el) { el.textContent = msg; el.style.display = 'block'; }
+}
+function clearErr(input) {
+  const id = 'err_' + input.id;
+  const el = document.getElementById(id);
+  if (el) { el.textContent = ''; el.style.display = 'none'; }
+}
+function clearAllErrors() {
+  document.querySelectorAll('.form-error').forEach(el => { el.textContent = ''; el.style.display = 'none'; });
+}
+</script>
+</body>
+</html>
